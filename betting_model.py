@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 # NBA API Endpoints
 from nba_api.stats.endpoints import playercareerstats
 from nba_api.stats.endpoints import playergamelog
+from nba_api.stats.endpoints import commonplayerinfo
 from nba_api.stats.endpoints import teamgamelog
 
 '''
@@ -25,3 +26,13 @@ Workflow:
 8. Run predictions
 9. Get LLM to summarize the predictions
 '''
+
+# TODO: Function to get player ID from player name
+
+# assume playerID provided for now (Jokic ID = 203999)
+player_id = 203999
+
+career = playercareerstats.PlayerCareerStats(player_id=player_id)
+commoninfo = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
+
+team_id = commoninfo.get_data_frames()[0]['TEAM_ID'].values[0]
