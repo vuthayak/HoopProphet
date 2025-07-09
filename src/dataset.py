@@ -195,6 +195,11 @@ if __name__ == "__main__":
 
     dataset = dataset_cleaning(team_games, inactive_games) # Clean the dataset
 
+    
+    # Write/Overwrite the dataset to data folder
+    dataset.to_csv('../data/dataset.csv', index=True) # Save dataset to CSV file in data folder
+    avg_career_stats.to_csv('../data/avg_career_stats.csv', index=False)
+
 
 
     
