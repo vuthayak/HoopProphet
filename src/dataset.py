@@ -15,6 +15,9 @@ from nba_api.stats.static.players import get_players
 
 # Function to get player ID from player name
 def get_player_id(player_name):
+    # List of all players in the NBA currently (will be used to autofill in search bar)
+    players = pd.DataFrame(get_players())
+
     active_players = players[players['is_active']== True]
 
     # Retrieve player ID provided player name
@@ -168,19 +171,12 @@ def dataset_cleaning(team_games, inactive_games):
     return gamelog
 
 if __name__ == "__main__":
-    # List of all players in the NBA currently (will be used to autofill in search bar)
-    players = pd.DataFrame(get_players())
-
     # Idea: Dropdown to select player and opposing team in frontend, in order to account for rivalries 
     # (stronger/weaker performance against certain teams)
     test_name = 'Cade Cunningham' # TODO: Get user input from frontend (MUI autocomplete)
     opponent_team_abv = 'CLE' # Example opponent team ID (Cleveland Cavaliers)
 
     player_id = get_player_id(test_name) # Get player ID from player name
-
-    # Fetching avg career data
-    avg_career_stats = playercareerstats.PlayerCareerStats(player_id=player_id, per_mode36="PerGame").get_data_frames()[3] # Averaged career stats for regular season [Need for predicting prop]
-    print("Average career stats retrieved")
 
     current_season, previous_season, prev_previous_season = get_season()
 
@@ -195,10 +191,8 @@ if __name__ == "__main__":
 
     dataset = dataset_cleaning(team_games, inactive_games) # Clean the dataset
 
-    
     # Write/Overwrite the dataset to data folder
     dataset.to_csv('../data/dataset.csv', index=True) # Save dataset to CSV file in data folder
-    avg_career_stats.to_csv('../data/avg_career_stats.csv', index=False)
 
 
 
