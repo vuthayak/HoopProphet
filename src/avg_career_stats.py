@@ -39,6 +39,6 @@ def get_avg_career_stats(player_id):
     return None
 
 if __name__ == "__main__":
-    test_name = 'Cade Cunningham' # TODO: Get user input from frontend (MUI autocomplete)
+    test_name = 'Cade Cunningham'
     player_id = get_player_id(test_name) # Get player ID from player name
     get_avg_career_stats(player_id) # Get average career stats for the player
