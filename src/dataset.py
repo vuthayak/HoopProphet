@@ -160,7 +160,6 @@ def dataset_cleaning(team_games, inactive_games):
     gamelog['DND_ROLLING'] = gamelog['PLAYER_DND'].rolling(window=10, min_periods=1).sum()
     gamelog['GAMES_MISSED_ROLLING'] = gamelog['INACTIVE_ROLLING'] + gamelog['DND_ROLLING']
 
-
     # Fill Nans with 0
     gamelog.fillna(0, inplace=True) # Fill NaNs with 0
 
