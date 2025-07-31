@@ -15,7 +15,7 @@ def get_player_id(player_name):
 
     return player_id
 
-def get_avg_career_stats(player_id):
+def get_prop_line(player_id):
     """
     Fetches the average career stats for a given player ID.
     
@@ -30,15 +30,13 @@ def get_avg_career_stats(player_id):
 
     # Cleaning up the DataFrame
     avg_career_stats = avg_career_stats[['PTS','REB','AST','STL','BLK','FG3M']]
-    print(avg_career_stats)
+    
+    prop_line = avg_career_stats.apply(lambda x: round(x * 2) / 2)
 
-    # Write/Overwrite the average career stats to data folder
-    avg_career_stats.to_csv('../data/avg_career_stats.csv', index=False)
-    print("Average career stats retrieved")
-
-    return None
+    return prop_line
 
 if __name__ == "__main__":
     test_name = 'Cade Cunningham'
     player_id = get_player_id(test_name) # Get player ID from player name
-    get_avg_career_stats(player_id) # Get average career stats for the player
+    prop_line = get_prop_line(player_id) # Get average career stats for the player
+    prop_line.to_csv('../data/prop_line.csv', index=True) # Save prop line to CSV file in data folder

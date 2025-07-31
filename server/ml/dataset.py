@@ -5,7 +5,6 @@ from datetime import datetime
 import time
 
 # NBA API Endpoints
-from nba_api.stats.endpoints import playercareerstats
 from nba_api.stats.endpoints import commonplayerinfo
 from nba_api.stats.endpoints import playergamelog
 from nba_api.stats.endpoints import boxscoresummaryv2
@@ -46,10 +45,8 @@ def get_season():
     return current_season, previous_season, prev_previous_season
 
 # Function to get team game logs
-def get_team_games(team_id):
-    curr_team_gamelog = teamgamelog.TeamGameLog(team_id=team_id, season=current_season, season_type_all_star="Regular Season").get_data_frames()[0] # Team game log
-    
-    # Check if team has played at least 21 games in the current season (1/4 season)
+def get_team_games(team_id, current_season, previous_season):
+    curr_team_gamelog = teamgamelog.TeamGameLog(team_id=team_id, season=current_season, season_type_all_star="Regular Season").get_data_frames()[0]
     if curr_team_gamelog.count()['Game_ID'] <= 20:
         print("Not enough games played in current season, using previous season data as well")
         prev_team_gamelog = teamgamelog.TeamGameLog(team_id=team_id, season=previous_season, season_type_all_star="Regular Season").get_data_frames()[0]
@@ -64,46 +61,38 @@ def get_team_games(team_id):
     return team_gamelog[['Game_ID', "MATCHUP", "WL"]], used_prev_season # DataFrame of non-player stats for each game
 
 # Function to get player game logs
-def get_player_gamelog(player_id, team_id):
-    team_gamelog = teamgamelog.TeamGameLog(team_id=team_id, season=current_season, season_type_all_star="Regular Season").get_data_frames()[0] # Team game log
-    
-    if team_gamelog.count()['Game_ID'] <= 20:
-        prev_gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=previous_season, season_type_all_star="Regular Season").get_data_frames()[0] # Previous season game log
-        curr_gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=current_season, season_type_all_star="Regular Season").get_data_frames()[0] # Current season game log
-        gamelog = pd.concat([curr_gamelog, prev_gamelog], ignore_index=True) # Combine current and previous season game logs
-
+def get_player_gamelog(player_id, current_season, previous_season, used_prev_season):
+    curr_gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=current_season, season_type_all_star="Regular Season").get_data_frames()[0]
+    if used_prev_season:
+        prev_gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=previous_season, season_type_all_star="Regular Season").get_data_frames()[0]
+        gamelog = pd.concat([curr_gamelog, prev_gamelog], ignore_index=True)
     else:
-        gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=current_season, season_type_all_star="Regular Season").get_data_frames()[0] # Game log
-
+        gamelog = curr_gamelog
     print("Player game log retrieved")
-
     return gamelog
 
 # Function to get box score summary for inactive players
-def player_inactive(player_id):
-    inactive_games = [] # List to store inactive games
-
-    # Iterate through each box score summary in the gamelog to find games where the player was inactive
-    for gameId in team_games['Game_ID']:
-        boxscore = boxscoresummaryv2.BoxScoreSummaryV2(game_id=str(gameId)).get_data_frames()[3] # Inactive players
-        time.sleep(1)
-
-        if player_id in boxscore['PLAYER_ID'].values:
-            inactive_games.append(gameId)
-    
+def player_inactive(player_id, game_ids):
+    inactive_games = []
+    for gameId in game_ids:
+        try:
+            boxscore = boxscoresummaryv2.BoxScoreSummaryV2(game_id=str(gameId)).get_data_frames()[3]
+            time.sleep(1)
+            if player_id in boxscore['PLAYER_ID'].values:
+                inactive_games.append(gameId)
+        except Exception as e:
+            print(f"Error processing game {gameId}: {e}")
+            continue
     print("Inactive games retrieved")
 
     return inactive_games # Return list of inactive games
 
 # Function to grab additional rivalry matches for the player vs opponent team
-def get_rivalry_games(player_id, opponent_team_abv, used_prev_season):
-    # Determining the season to use based on whether previous season data was used
+def get_rivalry_games(player_id, opponent_team_abv, used_prev_season, previous_season, prev_previous_season):
     if used_prev_season:
         search_season = prev_previous_season
     else:
         search_season = previous_season
-
-
     search_gamelog = playergamelog.PlayerGameLog(player_id=player_id, season=search_season, season_type_all_star="Regular Season").get_data_frames()[0]
 
     return search_gamelog[search_gamelog['MATCHUP'].str.contains(str(opponent_team_abv))] # Filter games against the opponent team
@@ -128,10 +117,13 @@ def double_double(row):
     return 1 if count >= 2 else 0
 
 # Function to clean and arrange dataset with all pieces together
-def dataset_cleaning(team_games, inactive_games):
-    player_gamelog = get_player_gamelog(player_id=player_id, team_id=team_id) # Get player game log
-
-    gamelog = pd.merge(player_gamelog, team_games, how='right', on=['Game_ID','MATCHUP', 'WL']) # Merge player gamelog with team game log
+def dataset_cleaning(player_gamelog, team_games, inactive_games, rivalry_games):
+    # If team_games is empty, skip the merge and use player_gamelog as base
+    if team_games is not None and not team_games.empty:
+        gamelog = pd.merge(player_gamelog, team_games, how='right', on=['Game_ID','MATCHUP', 'WL'])
+    else:
+        print("Warning: team_games is empty, using player_gamelog only.")
+        gamelog = player_gamelog.copy()
 
     gamelog = pd.concat([gamelog, rivalry_games], ignore_index=True) # Combine current and previous season game logs
     gamelog.set_index('Game_ID', inplace=True) # Set Game_ID as index
@@ -166,34 +158,27 @@ def dataset_cleaning(team_games, inactive_games):
     # Type formatting
     gamelog = gamelog.astype(int)
     print("Dataset cleaned and arranged")
-
     return gamelog
 
-if __name__ == "__main__":
-    # Idea: Dropdown to select player and opposing team in frontend, in order to account for rivalries 
-    # (stronger/weaker performance against certain teams)
-    test_name = 'Cade Cunningham' # TODO: Get user input from frontend (MUI autocomplete)
-    opponent_team_abv = 'CLE' # Example opponent team ID (Cleveland Cavaliers)
-
-    player_id = get_player_id(test_name) # Get player ID from player name
-
+def build_dataset(player_name, opponent_team_abv):
+    """
+    Build a cleaned dataset for a given player and opponent team abbreviation.
+    Returns the processed DataFrame.
+    """
+    player_id = get_player_id(player_name)
     current_season, previous_season, prev_previous_season = get_season()
-
-    commoninfo = commonplayerinfo.CommonPlayerInfo(player_id=player_id) # Player info
+    commoninfo = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
     team_id = commoninfo.get_data_frames()[0]['TEAM_ID'].values[0]
+    team_games, used_prev_season = get_team_games(team_id, current_season, previous_season)
+    player_gamelog = get_player_gamelog(player_id, current_season, previous_season, used_prev_season)
+    inactive_games = player_inactive(player_id, game_ids=team_games['Game_ID'])
+    rivalry_games = get_rivalry_games(player_id, opponent_team_abv, used_prev_season, previous_season, prev_previous_season)
+    dataset = dataset_cleaning(player_gamelog, team_games, inactive_games, rivalry_games)
+    return dataset
 
-    team_games, used_prev_season = get_team_games(team_id) # Get team games
-
-    inactive_games = player_inactive(player_id) # Check if player is inactive for any game in the gamelog
-
-    rivalry_games = get_rivalry_games(player_id, opponent_team_abv, used_prev_season) # Get rivalry games
-
-    dataset = dataset_cleaning(team_games, inactive_games) # Clean the dataset
-
-    # Write/Overwrite the dataset to data folder
-    dataset.to_csv('../data/dataset.csv', index=True) # Save dataset to CSV file in data folder
-
-
-
-    
+if __name__ == "__main__":
+    test_name = 'Cade Cunningham'
+    opponent_team_abv = 'CLE'
+    dataset = build_dataset(test_name, opponent_team_abv)
+    print(dataset.head(), len(dataset))
 
