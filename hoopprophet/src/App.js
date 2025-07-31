@@ -44,7 +44,7 @@ const theme = createTheme({
   },
 });
 
-
+const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8000";
 
 function App() {
   const [players, setPlayers] = useState([]);
@@ -62,8 +62,8 @@ function App() {
       try {
         // Fetch players and teams in parallel
         const [playersResponse, teamsResponse] = await Promise.all([
-          fetch('http://localhost:8000/players'),
-          fetch('http://localhost:8000/teams')
+          fetch(`${API_BASE}/players`),
+          fetch(`${API_BASE}/teams`)
         ]);
         
         const playersData = await playersResponse.json();
@@ -96,7 +96,7 @@ function App() {
       setPredictionStatus('Starting prediction...');
       try {
         setPredictionStatus('Connecting to API...');
-        const response = await fetch('http://localhost:8000/predict', {
+        const response = await fetch(`${API_BASE}/predict`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -189,8 +189,7 @@ function App() {
         <Box
           sx={{
             bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
+            pt: 2,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
