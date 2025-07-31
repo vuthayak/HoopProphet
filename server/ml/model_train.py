@@ -3,6 +3,10 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from xgboost import XGBRegressor
 
+# Data imports
+from .dataset import build_dataset
+from .prop_line import get_prop_line
+
 # Cross-validation imports
 from sklearn.model_selection import RepeatedKFold
 from sklearn.model_selection import cross_val_score
@@ -38,12 +42,8 @@ def load_data(file_path):
     print(f"Data loaded from {file_path} with shape {data.shape}")
     return data
 
-data = load_data('../data/dataset.csv')
-data.set_index("Game_ID", inplace=True)
-
-prop_line = load_data('../data/avg_career_stats.csv')
-
 def train_models(data):
+
     # Create a dataframe to hold the best model metrics for each stat
     metrics = []
 
@@ -132,7 +132,6 @@ def predictions_vs_propline(predictions, prop_line):
     results (dict): Dictionary with comparison results.
     """
     print("Comparing predictions with prop line...")
-    prop_line = prop_line.apply(lambda x: round(x * 2) / 2)
     results = {}
     for stat in predictions:
         if stat in prop_line.columns:
@@ -151,20 +150,4 @@ def predictions_vs_propline(predictions, prop_line):
     return results
 
 if __name__ == "__main__":
-    # Load the data
-    data = load_data('../data/dataset.csv')
-    data.set_index("Game_ID", inplace=True)
-    prop_line = load_data('../data/avg_career_stats.csv')
-
-    # Train models and get metrics
-    metrics_df = train_models(data)
-
-    # Predict stats for player versus team
-    predictions = predict_stats(data, metrics_df)
-
-    # Compare predictions with prop lines
-    results = predictions_vs_propline(predictions, prop_line)
-
-    print("Predictions vs Prop Lines:")
-    for stat, result in results.items():
-        print(f"  {stat}: {result}")
+    pass
