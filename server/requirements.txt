@@ -4,3 +4,4 @@ nba_api
 pandas
 scikit-learn
 xgboost
+google-generativeai

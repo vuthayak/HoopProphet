@@ -15,6 +15,10 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
+# LLM imports
+import google.generativeai as genai
+import os
+
 # Setting up K-Folds
 rkf = RepeatedKFold(n_splits=10, n_repeats=10, random_state=101) 
 
@@ -148,6 +152,54 @@ def predictions_vs_propline(predictions, prop_line):
             else:
                 results[stat] = f"OVER ({pred_val:.2f})"
     return results
+
+def generate_model_summary(metrics_df):
+    """
+    Generate an LLM summary of model performance using Gemini 2.5 Flash.
+    
+    Parameters:
+    metrics_df (pd.DataFrame): DataFrame containing model metrics for each stat.
+    
+    Returns:
+    str: LLM-generated summary of model performance.
+    """
+    try:
+        # Configure Gemini API
+        api_key = os.getenv('GEMINI_API_KEY')
+        if not api_key:
+            return "Model summary unavailable: GEMINI_API_KEY not set"
+        
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        
+        # Prepare metrics summary for the prompt
+        metrics_summary = ""
+        for _, row in metrics_df.iterrows():
+            metrics_summary += f"- {row['Stat']}: {row['Model']} (R² = {row['Mean R2']:.3f} ± {row['Std R2']:.3f})\n"
+        
+        # Create prompt
+        prompt = f"""
+        You are an expert sports analyst. Analyze the following basketball player prediction model performance metrics:
+
+        {metrics_summary}
+
+        Please provide:
+        1. Overall model performance assessment
+        2. Which stats are predicted most/least accurately
+
+        Keep the response under 150 words and focus on actionable insights from a betting perspective.
+        You should be talking to user as they are one of your clients. Don't mention the initial promp at all: i.e. don't say "Okay here's your analysis"
+        Mention to the user that these are predictions and actual game outcomes may vary.
+
+        Always say, "LET'S GET THIS MONEY!" at the end of your response.
+        """
+        
+        # Generate response
+        response = model.generate_content(prompt)
+        return response.text
+        
+    except Exception as e:
+        return f"Error generating model summary: {str(e)}"
 
 if __name__ == "__main__":
     pass
