@@ -17,9 +17,7 @@ app = FastAPI(title="HoopProphet API", description="NBA Player Analytics & Predi
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000",
-                   "https://hoopprophet.vercel.app",
-                   "https://*.vercel.app",
-                   "*"
+                   "https://hoopprophet.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
