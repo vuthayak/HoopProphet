@@ -512,36 +512,57 @@ function App() {
           ))}
         </Box>
 
-        {/* Prop Line Comparisons */}
-        <Typography
-          variant="h5"
-          align="center"
-          color="text.primary"
-          gutterBottom
-          sx={{ fontFamily: "Special Gothic Expanded One, Lato, sans-serif", mt: 4 }}
-        >
-          Prop Line Analysis
-        </Typography>
-        
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {Object.entries(predictions.vs_prop_line).map(([stat, recommendation]) => (
-            <Box
-              key={stat}
-              sx={{
-                p: 2,
-                bgcolor: recommendation.includes('OVER') ? '#e8f5e8' : '#fff3e0',
-                borderRadius: 1,
-                border: recommendation.includes('OVER') ? '1px solid #4caf50' : '1px solid #ff9800',
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-              }}
+        {/* Side by side analysis */}
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4, mt: 4, width: '100%' }}>
+          {/* Prop Line Analysis */}
+          <Box sx={{ flex: 1, bgcolor: 'background.paper', p: 2, borderRadius: 2, boxShadow: 1 }}>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.primary"
+              gutterBottom
+              sx={{ fontFamily: "Special Gothic Expanded One, Lato, sans-serif" }}
             >
-              <Typography variant="body1">
-                <strong>{prettifyStatName(stat)}:</strong> {recommendation}
+              Prop Line Analysis
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {Object.entries(predictions.vs_prop_line).map(([stat, recommendation]) => (
+                <Box
+                  key={stat}
+                  sx={{
+                    p: 2,
+                    bgcolor: recommendation.includes('OVER') ? '#e8f5e8' : '#fff3e0',
+                    borderRadius: 1,
+                    border: recommendation.includes('OVER') ? '1px solid #4caf50' : '1px solid #ff9800',
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1">
+                    <strong>{prettifyStatName(stat)}:</strong> {recommendation}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+          {/* Model Performance Analysis */}
+          {predictions.model_summary && (
+            <Box sx={{ flex: 1, bgcolor: '#f8f9fa', p: 3, borderRadius: 2, border: '1px solid #e9ecef', boxShadow: 1 }}>
+              <Typography
+                variant="h5"
+                align="center"
+                color="text.primary"
+                gutterBottom
+                sx={{ fontFamily: "Special Gothic Expanded One, Lato, sans-serif" }}
+              >
+                Model Performance Analysis
+              </Typography>
+              <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+                {predictions.model_summary}
               </Typography>
             </Box>
-          ))}
+          )}
         </Box>
       </motion.div>
     </Container>

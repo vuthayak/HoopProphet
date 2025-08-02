@@ -7,7 +7,7 @@ from typing import List, Dict, Optional
 # Import your ML modules
 from ml.prop_line import get_player_id, get_prop_line
 from ml.dataset import build_dataset
-from ml.model_train import train_models, predict_stats, predictions_vs_propline
+from ml.model_train import train_models, predict_stats, predictions_vs_propline, generate_model_summary
 from nba_api.stats.static.players import get_players
 from nba_api.stats.static.teams import get_teams
 
@@ -42,6 +42,7 @@ class PredictionResponse(BaseModel):
     predictions: Dict[str, float]
     vs_prop_line: Dict[str, str]
     ml_metrics: Dict[str, str]
+    model_summary: str
 
 class PropLineResponse(BaseModel):
     player_name: str
@@ -207,12 +208,16 @@ def predict_player_stats(request: PredictionRequest):
         for _, row in metrics_df.iterrows():
             ml_metrics[row['Stat']] = f"{row['Model']} (R2: {row['Mean R2']:.3f})"
         
+        # Generate AI summary of model performance
+        model_summary = generate_model_summary(metrics_df)
+        
         return PredictionResponse(
             player_name=request.player_name,
             opponent_team_abv=request.opponent_team_abv,  # Fixed: was opponent_team
             predictions=predictions,
             vs_prop_line=results,
-            ml_metrics=ml_metrics
+            ml_metrics=ml_metrics,
+            model_summary=model_summary
         )
         
     except Exception as e:
