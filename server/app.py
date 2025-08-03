@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pandas as pd
@@ -13,30 +13,13 @@ from nba_api.stats.static.teams import get_teams
 
 app = FastAPI(title="HoopProphet API", description="NBA Player Analytics & Predictions")
 
-# Manual CORS middleware
-@app.middleware("http")
-async def add_cors_headers(request: Request, call_next):
-    response = await call_next(request)
-    
-    # Add CORS headers manually
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    response.headers["Access-Control-Max-Age"] = "86400"
-    
-    return response
-
-# Handle preflight OPTIONS requests
-@app.options("/{path:path}")
-async def options_handler(request: Request):
-    return Response(
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "*",
-        }
-    )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://hoopprophet.vercel.app"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Pydantic models for request/response
 class PlayerRequest(BaseModel):
