@@ -184,35 +184,57 @@ def predict_player_stats(request: PredictionRequest):
     This endpoint replicates the logic from model_train.py __main__ block.
     """
     try:
-        # Get player ID
-        player_id = get_player_id(request.player_name)
+        print(f"🏀 Starting prediction for {request.player_name} vs {request.opponent_team_abv}")
         
-        # Build the dataset (equivalent to the __main__ logic)
+        # Get player ID
+        print("📍 Step 1: Getting player ID...")
+        player_id = get_player_id(request.player_name)
+        print(f"✅ Player ID: {player_id}")
+        
+        # Build the dataset
+        print("📊 Step 2: Building dataset...")
         data = build_dataset(request.player_name, request.opponent_team_abv)
+        print(f"✅ Dataset shape: {data.shape}")
+        print(f"✅ Dataset columns: {list(data.columns)}")
         
         # Get prop line
+        print("📈 Step 3: Getting prop line...")
         prop_line = get_prop_line(player_id)
+        print(f"✅ Prop line shape: {prop_line.shape}")
         
         # Train models and get metrics
+        print("🤖 Step 4: Training models...")
         metrics_df = train_models(data)
+        print(f"✅ Metrics shape: {metrics_df.shape}")
+        print(f"✅ Metrics columns: {list(metrics_df.columns)}")
         
         # Predict stats for player versus team
+        print("🎯 Step 5: Making predictions...")
         predictions = predict_stats(data, metrics_df)
+        print(f"✅ Predictions: {predictions}")
         
         # Compare predictions with prop lines
+        print("⚖️ Step 6: Comparing with prop lines...")
         results = predictions_vs_propline(predictions, prop_line)
+        print(f"✅ Results: {results}")
         
         # Convert metrics to a simple dict for response
+        print("📋 Step 7: Converting metrics...")
         ml_metrics = {}
         for _, row in metrics_df.iterrows():
             ml_metrics[row['Stat']] = f"{row['Model']} (R2: {row['Mean R2']:.3f})"
+        print(f"✅ ML Metrics: {ml_metrics}")
         
         # Generate AI summary of model performance
+        print("🤖 Step 8: Generating AI summary...")
         model_summary = generate_model_summary(metrics_df)
+        print("✅ AI summary generated successfully")
+        
+        print("🎉 Prediction completed successfully!")
         
         return PredictionResponse(
             player_name=request.player_name,
-            opponent_team_abv=request.opponent_team_abv,  # Fixed: was opponent_team
+            opponent_team_abv=request.opponent_team_abv,
             predictions=predictions,
             vs_prop_line=results,
             ml_metrics=ml_metrics,
@@ -220,6 +242,10 @@ def predict_player_stats(request: PredictionRequest):
         )
         
     except Exception as e:
+        print(f"❌ ERROR in predict endpoint: {str(e)}")
+        print(f"❌ ERROR type: {type(e).__name__}")
+        import traceback
+        print(f"❌ ERROR traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Error making prediction: {str(e)}")
 
 @app.get("/health")
