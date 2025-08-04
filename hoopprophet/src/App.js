@@ -44,7 +44,7 @@ const theme = createTheme({
   },
 });
 
-const API_BASE = process.env.REACT_APP_API_BASE || "https://hoopprophet-backend.onrender.com";
+const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8000";
 
 function App() {
   const [players, setPlayers] = useState([]);
