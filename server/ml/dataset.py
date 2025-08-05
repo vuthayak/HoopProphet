@@ -10,15 +10,7 @@ from nba_api.stats.endpoints import playergamelog
 from nba_api.stats.endpoints import boxscoresummaryv2
 from nba_api.stats.endpoints import teamgamelog
 from nba_api.stats.static.players import get_players
-from nba_api.library.http import NBAStatsHTTP
 
-def configure_nba_api():
-    """Configure NBA API with better timeout and retry settings"""
-    # Set longer timeout for NBA API requests
-    NBAStatsHTTP.timeout = 60  # Increase timeout to 60 seconds
-    
-    # Add delay between requests to avoid rate limiting
-    time.sleep(1)
 
 # Function to get player ID from player name
 def get_player_id(player_name):
@@ -173,8 +165,6 @@ def build_dataset(player_name, opponent_team_abv):
     Build a cleaned dataset for a given player and opponent team abbreviation.
     Returns the processed DataFrame.
     """
-    configure_nba_api()  # Configure NBA API settings
-
     player_id = get_player_id(player_name)
     current_season, previous_season, prev_previous_season = get_season()
     commoninfo = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
