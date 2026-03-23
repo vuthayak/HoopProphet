@@ -26,7 +26,7 @@ Bettors can quickly identify high-probability player props backed by data — no
 - [ ] Dynamic prop selection — surface top 4-5 props each player is known for
 - [ ] Hit rate analysis across multiple game windows (L5, L10, L20, season)
 - [ ] Adjustable stat lines — default derived from player data, user can slide up/down
-- [ ] Rich feature engineering: opponent defense, rest/schedule, recent form, consistency, matchup history, pace/tempo, minutes context
+- [x] Rich feature engineering: opponent defense, rest/schedule, recent form, consistency, matchup history, pace/tempo, minutes context — Validated in Phase 2: Feature Engineering Pipeline
 - [ ] Offline training pipeline — nightly/weekly retrain, serve from saved model artifact
 - [ ] Back-testing engine to validate model accuracy against past NBA seasons
 - [ ] Keyword-based news/sentiment flags (injury, arrest, trade rumors, not playing)
@@ -52,6 +52,8 @@ Bettors can quickly identify high-probability player props backed by data — no
 **V1 state:** Working full-stack app with React frontend (monolithic 592-line App.js), FastAPI backend, and scikit-learn/XGBoost ML pipeline. V1 predicts raw stat values and compares to career averages. Model accuracy was weak due to per-player training on small samples (~60-80 rows), thin features, and model-switching between Linear Regression and XGBoost.
 
 **V2 direction:** Pivot from "predict the stat" to "predict the probability of hitting a prop." One unified LightGBM model trained across all players on multi-season data. Core audience is sports bettors who want data-backed prop picks.
+
+**Current state:** Phase 2 complete. The offline feature engineering pipeline now produces a leakage-safe, long-format Parquet training dataset with rolling/statistical/contextual/matchup features and binary over/under targets.
 
 **Technical debt from V1:**
 - Monolithic frontend (single App.js, no components)
@@ -102,4 +104,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-23 after Phase 1 completion — Data Pipeline & Caching*
+*Last updated: 2026-03-23 after Phase 2 completion — Feature Engineering Pipeline*
