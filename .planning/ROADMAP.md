@@ -39,10 +39,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 3 plans
 
 Plans:
-
-- 01-01-PLAN.md — Foundation: dependencies, SQLite DB layer, test infrastructure, NBA API client
-- 01-02-PLAN.md — Data collectors: team rosters, schedules, advanced stats, player game logs
-- 01-03-PLAN.md — DNP synthesis, CLI ingest orchestrator, integration tests
+- [x] 01-01-PLAN.md — Foundation: dependencies, SQLite DB layer, test infrastructure, NBA API client
+- [x] 01-02-PLAN.md — Data collectors: team rosters, schedules, advanced stats, player game logs
+- [x] 01-03-PLAN.md — DNP synthesis, CLI ingest orchestrator, integration tests
 
 ### Phase 2: Feature Engineering Pipeline
 
@@ -147,15 +146,15 @@ Plans:
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 
-| Phase                           | Plans Complete | Status            | Completed |
-| ------------------------------- | -------------- | ----------------- | --------- |
-| 1. Data Pipeline & Caching      | 0/3            | Planning complete | -         |
-| 2. Feature Engineering Pipeline | 0/3            | Planning complete | -         |
-| 3. Model Training & Calibration | 0/?            | Not started       | -         |
-| 4. Back-Testing Engine          | 0/?            | Not started       | -         |
-| 5. API Layer & Prop Serving     | 0/?            | Not started       | -         |
-| 6. News & Injury Flags          | 0/?            | Not started       | -         |
-| 7. Frontend Rebuild             | 0/?            | Not started       | -         |
-| 8. Polish & Hardening           | 0/?            | Not started       | -         |
+| Phase                           | Plans Complete | Status            | Completed  |
+| ------------------------------- | -------------- | ----------------- | ---------- |
+| 1. Data Pipeline & Caching      | 3/3            | Complete          | 2026-03-23 |
+| 2. Feature Engineering Pipeline | 3/3            | Complete          | 2026-03-23 |
+| 3. Model Training & Calibration | 0/?            | Not started       | -          |
+| 4. Back-Testing Engine          | 0/?            | Not started       | -          |
+| 5. API Layer & Prop Serving     | 0/?            | Not started       | -          |
+| 6. News & Injury Flags          | 0/?            | Not started       | -          |
+| 7. Frontend Rebuild             | 0/?            | Not started       | -          |
+| 8. Polish & Hardening           | 0/?            | Not started       | -          |
 
 
