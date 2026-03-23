@@ -65,16 +65,15 @@ def compute_rolling_features(played_df: pd.DataFrame) -> pd.DataFrame:
 
     df["games_played_season"] = df.groupby(["player_id", "season"]).cumcount() + 1
 
-    rolling_cols = [
-        c
-        for c in df.columns
-        if "_avg_L" in c or "_std_L" in c or "_season_avg" in c or c == "games_played_season"
-    ]
+    rolling_cols = [c for c in df.columns if "_avg_L" in c or "_std_L" in c]
+    season_cols = [c for c in df.columns if "_season_avg" in c or c == "games_played_season"]
+
     df[rolling_cols] = df.groupby("player_id")[rolling_cols].shift(1)
+    df[season_cols] = df.groupby(["player_id", "season"])[season_cols].shift(1)
 
     logger.info(
         "Completed rolling feature computation: total columns=%d, rolling columns=%d",
         len(df.columns),
-        len(rolling_cols),
+        len(rolling_cols) + len(season_cols),
     )
     return df
