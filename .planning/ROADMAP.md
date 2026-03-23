@@ -59,7 +59,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Foundation & rolling features (constants, queries, fixtures, rolling avg/std with .shift(1))
-- [ ] 02-02-PLAN.md — Contextual & matchup features (rest days, B2B, home/away, opponent defense/pace, matchup history)
+- [x] 02-02-PLAN.md — Contextual & matchup features (rest days, B2B, home/away, opponent defense/pace, matchup history)
 - [ ] 02-03-PLAN.md — Target generation, pipeline orchestration & CLI integration (binary over/under, Parquet output, --features flag)
 
 ### Phase 3: Model Training & Calibration

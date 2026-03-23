@@ -19,12 +19,12 @@ Requirements for V2 release. Each maps to roadmap phases.
 
 - [x] **FEAT-01**: System computes rolling averages per stat across L5, L10, L20 game windows
 - [x] **FEAT-02**: System computes rolling standard deviation per stat (consistency metric)
-- [ ] **FEAT-03**: System computes opponent defensive rating vs player position for each game
-- [ ] **FEAT-04**: System computes rest days and back-to-back game flags
-- [ ] **FEAT-05**: System computes home/away indicator
-- [ ] **FEAT-06**: System computes team pace and opponent pace features
+- [x] **FEAT-03**: System computes opponent defensive rating vs player position for each game
+- [x] **FEAT-04**: System computes rest days and back-to-back game flags
+- [x] **FEAT-05**: System computes home/away indicator
+- [x] **FEAT-06**: System computes team pace and opponent pace features
 - [x] **FEAT-07**: System computes minutes trend features (recent minutes average)
-- [ ] **FEAT-08**: System computes historical matchup stats (player's average vs specific opponent)
+- [x] **FEAT-08**: System computes historical matchup stats (player's average vs specific opponent)
 - [x] **FEAT-09**: All features use `.shift(1)` temporal guard — game N's features only contain data through game N-1
 - [ ] **FEAT-10**: Feature matrix output as Parquet file with binary target column (over/under the line)
 
@@ -125,12 +125,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-05 | Phase 1 | Complete |
 | FEAT-01 | Phase 2 | Complete |
 | FEAT-02 | Phase 2 | Complete |
-| FEAT-03 | Phase 2 | Pending |
-| FEAT-04 | Phase 2 | Pending |
-| FEAT-05 | Phase 2 | Pending |
-| FEAT-06 | Phase 2 | Pending |
+| FEAT-03 | Phase 2 | Complete |
+| FEAT-04 | Phase 2 | Complete |
+| FEAT-05 | Phase 2 | Complete |
+| FEAT-06 | Phase 2 | Complete |
 | FEAT-07 | Phase 2 | Complete |
-| FEAT-08 | Phase 2 | Pending |
+| FEAT-08 | Phase 2 | Complete |
 | FEAT-09 | Phase 2 | Complete |
 | FEAT-10 | Phase 2 | Pending |
 | MODL-01 | Phase 3 | Pending |
