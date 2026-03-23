@@ -13,7 +13,7 @@ Requirements for V2 release. Each maps to roadmap phases.
 - [x] **DATA-02**: System collects team stats (defensive ratings, pace) and caches in SQLite
 - [x] **DATA-03**: System handles NBA API rate limits with exponential backoff and retry logic
 - [x] **DATA-04**: Data fetcher is resumable — can pick up where it left off if interrupted
-- [ ] **DATA-05**: System synthesizes zero-minute rows for games where a player was on the roster but did not play (DNP/inactive)
+- [x] **DATA-05**: System synthesizes zero-minute rows for games where a player was on the roster but did not play (DNP/inactive)
 
 ### Feature Engineering
 
@@ -122,7 +122,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 1 | Complete |
 | DATA-04 | Phase 1 | Complete |
-| DATA-05 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Complete |
 | FEAT-01 | Phase 2 | Pending |
 | FEAT-02 | Phase 2 | Pending |
 | FEAT-03 | Phase 2 | Pending |
