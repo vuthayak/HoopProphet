@@ -10,7 +10,7 @@ Requirements for V2 release. Each maps to roadmap phases.
 ### Data Pipeline
 
 - [x] **DATA-01**: System collects multi-season NBA game logs for all active players and caches in SQLite
-- [ ] **DATA-02**: System collects team stats (defensive ratings, pace) and caches in SQLite
+- [x] **DATA-02**: System collects team stats (defensive ratings, pace) and caches in SQLite
 - [x] **DATA-03**: System handles NBA API rate limits with exponential backoff and retry logic
 - [x] **DATA-04**: Data fetcher is resumable — can pick up where it left off if interrupted
 - [ ] **DATA-05**: System synthesizes zero-minute rows for games where a player was on the roster but did not play (DNP/inactive)
@@ -119,7 +119,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | DATA-01 | Phase 1 | Complete |
-| DATA-02 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 1 | Complete |
 | DATA-04 | Phase 1 | Complete |
 | DATA-05 | Phase 1 | Pending |

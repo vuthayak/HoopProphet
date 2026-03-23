@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Foundation: dependencies, SQLite DB layer, test infrastructure, NBA API client
-- [ ] 01-02-PLAN.md — Data collectors: team rosters, schedules, advanced stats, player game logs
+- [x] 01-02-PLAN.md — Data collectors: team rosters, schedules, advanced stats, player game logs
 - [ ] 01-03-PLAN.md — DNP synthesis, CLI ingest orchestrator, integration tests
 
 ### Phase 2: Feature Engineering Pipeline
