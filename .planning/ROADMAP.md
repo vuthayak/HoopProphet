@@ -33,7 +33,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Data fetcher recovers gracefully from interruptions and resumes without re-fetching completed data
   4. Zero-minute rows exist for games where a player was on the roster but did not play
   5. NBA API rate limits never cause data collection to fail permanently
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Foundation: dependencies, SQLite DB layer, test infrastructure, NBA API client
+- [ ] 01-02-PLAN.md — Data collectors: team rosters, schedules, advanced stats, player game logs
+- [ ] 01-03-PLAN.md — DNP synthesis, CLI ingest orchestrator, integration tests
 
 ### Phase 2: Feature Engineering Pipeline
 **Goal**: Raw game data is transformed into a training-ready feature matrix with strict temporal integrity
@@ -120,7 +125,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Pipeline & Caching | 0/? | Not started | - |
+| 1. Data Pipeline & Caching | 0/3 | Planning complete | - |
 | 2. Feature Engineering Pipeline | 0/? | Not started | - |
 | 3. Model Training & Calibration | 0/? | Not started | - |
 | 4. Back-Testing Engine | 0/? | Not started | - |
