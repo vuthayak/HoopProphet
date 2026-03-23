@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 
 from server.pipeline.db.connection import get_connection
+from server.pipeline.db.queries import insert_game_logs, insert_team_stats, upsert_player, upsert_team
 from server.pipeline.db.schema import init_db
 
 
@@ -69,3 +70,68 @@ def sample_team_stats_df():
         "NET_RATING": 6.7,
         "PACE": 99.3,
     }])
+
+
+@pytest.fixture
+def feature_db():
+    """Provide a temporary DB preloaded with feature-engineering test data."""
+    tmp_dir = tempfile.mkdtemp()
+    db_path = os.path.join(tmp_dir, "feature.db")
+    conn = get_connection(db_path)
+    init_db(conn)
+
+    lakers_id = 1610612747
+    nuggets_id = 1610612743
+    lebron_id = 2544
+    jokic_id = 203999
+
+    upsert_team(conn, lakers_id, "LAL", "Los Angeles Lakers")
+    upsert_team(conn, nuggets_id, "DEN", "Denver Nuggets")
+
+    upsert_player(conn, lebron_id, "LeBron James", True, "F", lakers_id)
+    upsert_player(conn, jokic_id, "Nikola Jokic", True, "C", nuggets_id)
+
+    insert_team_stats(conn, lakers_id, "2022-23", 112.5, 114.8, 2.3, 100.5)
+    insert_team_stats(conn, lakers_id, "2023-24", 110.3, 116.1, 5.8, 99.8)
+    insert_team_stats(conn, nuggets_id, "2022-23", 110.1, 117.2, 7.1, 97.3)
+    insert_team_stats(conn, nuggets_id, "2023-24", 111.8, 118.5, 6.7, 98.1)
+
+    game_logs = [
+        # Jokic 2022-23 (3 played)
+        {"player_id": jokic_id, "game_id": "0022200901", "season": "2022-23", "game_date": "2023-03-10", "matchup": "DEN vs. LAL", "wl": "W", "min": 35, "pts": 28, "reb": 12, "ast": 10, "stl": 1, "blk": 1, "fg3m": 1, "fgm": 11, "fga": 18, "ftm": 5, "fta": 6, "oreb": 2, "dreb": 10, "tov": 3, "pf": 2, "plus_minus": 9, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022200902", "season": "2022-23", "game_date": "2023-03-13", "matchup": "DEN @ PHX", "wl": "L", "min": 34, "pts": 24, "reb": 11, "ast": 8, "stl": 2, "blk": 0, "fg3m": 1, "fgm": 10, "fga": 19, "ftm": 3, "fta": 4, "oreb": 1, "dreb": 10, "tov": 4, "pf": 3, "plus_minus": -4, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022200903", "season": "2022-23", "game_date": "2023-03-16", "matchup": "DEN vs. LAC", "wl": "W", "min": 36, "pts": 30, "reb": 14, "ast": 9, "stl": 1, "blk": 1, "fg3m": 2, "fgm": 12, "fga": 20, "ftm": 4, "fta": 5, "oreb": 3, "dreb": 11, "tov": 2, "pf": 2, "plus_minus": 11, "is_dnp": 0},
+        # Jokic 2023-24 (11 played + 1 DNP)
+        {"player_id": jokic_id, "game_id": "0022300001", "season": "2023-24", "game_date": "2023-10-25", "matchup": "DEN vs. LAL", "wl": "W", "min": 35, "pts": 29, "reb": 12, "ast": 11, "stl": 1, "blk": 1, "fg3m": 2, "fgm": 11, "fga": 18, "ftm": 5, "fta": 6, "oreb": 2, "dreb": 10, "tov": 3, "pf": 2, "plus_minus": 15, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300002", "season": "2023-24", "game_date": "2023-10-27", "matchup": "DEN @ MEM", "wl": "W", "min": 37, "pts": 27, "reb": 10, "ast": 9, "stl": 2, "blk": 0, "fg3m": 1, "fgm": 10, "fga": 19, "ftm": 6, "fta": 7, "oreb": 2, "dreb": 8, "tov": 4, "pf": 2, "plus_minus": 7, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300003", "season": "2023-24", "game_date": "2023-10-30", "matchup": "DEN vs. OKC", "wl": "L", "min": 33, "pts": 22, "reb": 9, "ast": 8, "stl": 1, "blk": 1, "fg3m": 1, "fgm": 9, "fga": 17, "ftm": 3, "fta": 4, "oreb": 1, "dreb": 8, "tov": 5, "pf": 3, "plus_minus": -6, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300004", "season": "2023-24", "game_date": "2023-11-02", "matchup": "DEN @ LAL", "wl": "W", "min": 36, "pts": 31, "reb": 13, "ast": 10, "stl": 1, "blk": 2, "fg3m": 2, "fgm": 12, "fga": 21, "ftm": 5, "fta": 6, "oreb": 3, "dreb": 10, "tov": 3, "pf": 2, "plus_minus": 12, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300005", "season": "2023-24", "game_date": "2023-11-05", "matchup": "DEN vs. DAL", "wl": "W", "min": 34, "pts": 25, "reb": 11, "ast": 12, "stl": 2, "blk": 1, "fg3m": 1, "fgm": 10, "fga": 18, "ftm": 4, "fta": 5, "oreb": 2, "dreb": 9, "tov": 2, "pf": 2, "plus_minus": 10, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300006", "season": "2023-24", "game_date": "2023-11-08", "matchup": "DEN @ NOP", "wl": "L", "min": 0, "pts": 0, "reb": 0, "ast": 0, "stl": 0, "blk": 0, "fg3m": 0, "fgm": 0, "fga": 0, "ftm": 0, "fta": 0, "oreb": 0, "dreb": 0, "tov": 0, "pf": 0, "plus_minus": 0, "is_dnp": 1},
+        {"player_id": jokic_id, "game_id": "0022300007", "season": "2023-24", "game_date": "2023-11-11", "matchup": "DEN vs. HOU", "wl": "W", "min": 35, "pts": 34, "reb": 16, "ast": 13, "stl": 1, "blk": 1, "fg3m": 2, "fgm": 13, "fga": 22, "ftm": 6, "fta": 7, "oreb": 4, "dreb": 12, "tov": 3, "pf": 2, "plus_minus": 14, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300008", "season": "2023-24", "game_date": "2023-11-14", "matchup": "DEN @ GSW", "wl": "L", "min": 32, "pts": 20, "reb": 8, "ast": 7, "stl": 0, "blk": 1, "fg3m": 1, "fgm": 8, "fga": 16, "ftm": 3, "fta": 4, "oreb": 1, "dreb": 7, "tov": 4, "pf": 3, "plus_minus": -8, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300009", "season": "2023-24", "game_date": "2023-11-17", "matchup": "DEN vs. MIL", "wl": "W", "min": 37, "pts": 33, "reb": 15, "ast": 11, "stl": 2, "blk": 1, "fg3m": 2, "fgm": 12, "fga": 20, "ftm": 7, "fta": 8, "oreb": 3, "dreb": 12, "tov": 2, "pf": 2, "plus_minus": 13, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300010", "season": "2023-24", "game_date": "2023-11-20", "matchup": "DEN @ SAC", "wl": "L", "min": 34, "pts": 24, "reb": 10, "ast": 9, "stl": 1, "blk": 0, "fg3m": 1, "fgm": 9, "fga": 18, "ftm": 5, "fta": 6, "oreb": 2, "dreb": 8, "tov": 3, "pf": 3, "plus_minus": -2, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300011", "season": "2023-24", "game_date": "2023-11-23", "matchup": "DEN vs. PHX", "wl": "W", "min": 36, "pts": 30, "reb": 12, "ast": 10, "stl": 1, "blk": 2, "fg3m": 3, "fgm": 11, "fga": 19, "ftm": 5, "fta": 5, "oreb": 3, "dreb": 9, "tov": 2, "pf": 2, "plus_minus": 11, "is_dnp": 0},
+        {"player_id": jokic_id, "game_id": "0022300012", "season": "2023-24", "game_date": "2023-11-26", "matchup": "DEN @ MIN", "wl": "L", "min": 33, "pts": 26, "reb": 11, "ast": 8, "stl": 1, "blk": 1, "fg3m": 1, "fgm": 10, "fga": 17, "ftm": 5, "fta": 6, "oreb": 2, "dreb": 9, "tov": 4, "pf": 3, "plus_minus": -1, "is_dnp": 0},
+        # LeBron 2023-24 (11 played + 1 DNP, with one b2b)
+        {"player_id": lebron_id, "game_id": "0022301001", "season": "2023-24", "game_date": "2023-10-24", "matchup": "LAL @ DEN", "wl": "L", "min": 36, "pts": 27, "reb": 8, "ast": 9, "stl": 1, "blk": 1, "fg3m": 2, "fgm": 10, "fga": 20, "ftm": 5, "fta": 7, "oreb": 1, "dreb": 7, "tov": 3, "pf": 2, "plus_minus": -7, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301002", "season": "2023-24", "game_date": "2023-10-26", "matchup": "LAL vs. PHX", "wl": "W", "min": 35, "pts": 31, "reb": 9, "ast": 8, "stl": 2, "blk": 0, "fg3m": 3, "fgm": 11, "fga": 21, "ftm": 6, "fta": 8, "oreb": 1, "dreb": 8, "tov": 4, "pf": 2, "plus_minus": 6, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301003", "season": "2023-24", "game_date": "2023-10-29", "matchup": "LAL @ SAC", "wl": "L", "min": 34, "pts": 25, "reb": 7, "ast": 6, "stl": 1, "blk": 1, "fg3m": 2, "fgm": 9, "fga": 19, "ftm": 5, "fta": 6, "oreb": 1, "dreb": 6, "tov": 3, "pf": 3, "plus_minus": -5, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301004", "season": "2023-24", "game_date": "2023-11-01", "matchup": "LAL vs. LAC", "wl": "W", "min": 37, "pts": 33, "reb": 10, "ast": 7, "stl": 2, "blk": 1, "fg3m": 2, "fgm": 12, "fga": 22, "ftm": 7, "fta": 9, "oreb": 2, "dreb": 8, "tov": 4, "pf": 2, "plus_minus": 8, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301005", "season": "2023-24", "game_date": "2023-11-03", "matchup": "LAL @ ORL", "wl": "L", "min": 32, "pts": 26, "reb": 6, "ast": 9, "stl": 1, "blk": 0, "fg3m": 1, "fgm": 10, "fga": 18, "ftm": 5, "fta": 7, "oreb": 1, "dreb": 5, "tov": 2, "pf": 2, "plus_minus": -3, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301006", "season": "2023-24", "game_date": "2023-11-06", "matchup": "LAL vs. MIA", "wl": "W", "min": 35, "pts": 30, "reb": 8, "ast": 10, "stl": 2, "blk": 1, "fg3m": 3, "fgm": 11, "fga": 20, "ftm": 5, "fta": 6, "oreb": 1, "dreb": 7, "tov": 3, "pf": 2, "plus_minus": 9, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301007", "season": "2023-24", "game_date": "2023-11-09", "matchup": "LAL @ DEN", "wl": "L", "min": 0, "pts": 0, "reb": 0, "ast": 0, "stl": 0, "blk": 0, "fg3m": 0, "fgm": 0, "fga": 0, "ftm": 0, "fta": 0, "oreb": 0, "dreb": 0, "tov": 0, "pf": 0, "plus_minus": 0, "is_dnp": 1},
+        {"player_id": lebron_id, "game_id": "0022301008", "season": "2023-24", "game_date": "2023-11-12", "matchup": "LAL vs. POR", "wl": "W", "min": 36, "pts": 32, "reb": 9, "ast": 8, "stl": 1, "blk": 1, "fg3m": 2, "fgm": 12, "fga": 21, "ftm": 6, "fta": 8, "oreb": 2, "dreb": 7, "tov": 3, "pf": 2, "plus_minus": 12, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301009", "season": "2023-24", "game_date": "2023-11-15", "matchup": "LAL @ PHX", "wl": "L", "min": 34, "pts": 28, "reb": 7, "ast": 7, "stl": 1, "blk": 0, "fg3m": 2, "fgm": 10, "fga": 19, "ftm": 6, "fta": 7, "oreb": 1, "dreb": 6, "tov": 4, "pf": 3, "plus_minus": -4, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301010", "season": "2023-24", "game_date": "2023-11-17", "matchup": "LAL @ DEN", "wl": "L", "min": 35, "pts": 29, "reb": 8, "ast": 6, "stl": 2, "blk": 1, "fg3m": 3, "fgm": 10, "fga": 20, "ftm": 6, "fta": 8, "oreb": 1, "dreb": 7, "tov": 3, "pf": 2, "plus_minus": -2, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301011", "season": "2023-24", "game_date": "2023-11-18", "matchup": "LAL vs. UTA", "wl": "W", "min": 34, "pts": 26, "reb": 6, "ast": 9, "stl": 1, "blk": 0, "fg3m": 2, "fgm": 9, "fga": 18, "ftm": 6, "fta": 7, "oreb": 1, "dreb": 5, "tov": 2, "pf": 2, "plus_minus": 7, "is_dnp": 0},
+        {"player_id": lebron_id, "game_id": "0022301012", "season": "2023-24", "game_date": "2023-11-21", "matchup": "LAL vs. DAL", "wl": "W", "min": 37, "pts": 33, "reb": 10, "ast": 10, "stl": 2, "blk": 1, "fg3m": 3, "fgm": 12, "fga": 22, "ftm": 6, "fta": 8, "oreb": 2, "dreb": 8, "tov": 4, "pf": 2, "plus_minus": 10, "is_dnp": 0},
+    ]
+    insert_game_logs(conn, pd.DataFrame(game_logs))
+
+    try:
+        yield conn
+    finally:
+        conn.close()
+        shutil.rmtree(tmp_dir, ignore_errors=True)

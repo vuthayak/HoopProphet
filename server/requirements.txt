@@ -6,6 +6,7 @@ tenacity>=9.0.0
 tqdm>=4.66.0
 pandas>=2.2.0
 numpy>=2.1.0
+pyarrow>=19.0.0
 scikit-learn
 xgboost
 google-generativeai

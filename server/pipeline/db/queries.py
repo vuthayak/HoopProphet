@@ -88,3 +88,32 @@ def get_completed_count(conn: sqlite3.Connection, entity_type: str) -> int:
         (entity_type,),
     )
     return cursor.fetchone()[0]
+
+
+def get_game_logs_df(conn: sqlite3.Connection, seasons: list[str] = None) -> pd.DataFrame:
+    if seasons:
+        placeholders = ",".join(["?"] * len(seasons))
+        return pd.read_sql_query(
+            f"SELECT * FROM player_game_logs WHERE season IN ({placeholders})",
+            conn,
+            params=seasons,
+        )
+    return pd.read_sql_query("SELECT * FROM player_game_logs", conn)
+
+
+def get_team_stats_df(conn: sqlite3.Connection) -> pd.DataFrame:
+    return pd.read_sql_query("SELECT * FROM team_stats", conn)
+
+
+def get_players_df(conn: sqlite3.Connection) -> pd.DataFrame:
+    return pd.read_sql_query(
+        "SELECT player_id, full_name, position, team_id FROM players",
+        conn,
+    )
+
+
+def get_teams_df(conn: sqlite3.Connection) -> pd.DataFrame:
+    return pd.read_sql_query(
+        "SELECT team_id, abbreviation, full_name FROM teams",
+        conn,
+    )
