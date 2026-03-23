@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Completed 02-feature-engineering-pipeline-03-PLAN.md
-last_updated: "2026-03-23T03:05:21.653Z"
+stopped_at: Phase 3 discuss-phase — 03-CONTEXT.md written
+last_updated: "2026-03-23T12:00:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 2
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2025-03-22)
 
 **Core value:** Bettors can quickly identify high-probability player props backed by data — not gut feeling — so they know which bets are worth taking.
-**Current focus:** Phase 02 — feature-engineering-pipeline
+**Current focus:** Phase 03 — model-training-calibration (context locked; plan next)
 
 ## Current Position
 
 Phase: 3
-Plan: Not started
+Plan: Not started (03-CONTEXT.md ready)
 
 ## Performance Metrics
 
@@ -82,10 +82,10 @@ None yet.
 ### Blockers/Concerns
 
 - NBA API may block some cloud/Docker IPs — test data collection from deployment environment early in Phase 1
-- Isotonic calibration needs 5K+ samples — may need Platt scaling fallback if data is insufficient
+- ~~Isotonic calibration needs 5K+ samples — may need Platt scaling fallback if data is insufficient~~ **Resolved in Phase 3 discuss:** isotonic preferred; Platt fallback when isotonic is unreliable; log calibration method.
 
 ## Session Continuity
 
-Last session: 2026-03-23T03:02:28.011Z
-Stopped at: Completed 02-feature-engineering-pipeline-03-PLAN.md
+Last session: 2026-03-23T12:00:00.000Z
+Stopped at: Phase 3 discuss-phase complete (03-CONTEXT.md)
 Resume file: None
