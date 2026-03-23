@@ -26,7 +26,7 @@ Requirements for V2 release. Each maps to roadmap phases.
 - [x] **FEAT-07**: System computes minutes trend features (recent minutes average)
 - [x] **FEAT-08**: System computes historical matchup stats (player's average vs specific opponent)
 - [x] **FEAT-09**: All features use `.shift(1)` temporal guard — game N's features only contain data through game N-1
-- [ ] **FEAT-10**: Feature matrix output as Parquet file with binary target column (over/under the line)
+- [x] **FEAT-10**: Feature matrix output as Parquet file with binary target column (over/under the line)
 
 ### Model Training
 
@@ -132,7 +132,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FEAT-07 | Phase 2 | Complete |
 | FEAT-08 | Phase 2 | Complete |
 | FEAT-09 | Phase 2 | Complete |
-| FEAT-10 | Phase 2 | Pending |
+| FEAT-10 | Phase 2 | Complete |
 | MODL-01 | Phase 3 | Pending |
 | MODL-02 | Phase 3 | Pending |
 | MODL-03 | Phase 3 | Pending |

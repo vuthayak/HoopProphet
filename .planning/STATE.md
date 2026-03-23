@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 02-feature-engineering-pipeline-02-PLAN.md
-last_updated: "2026-03-23T02:58:20.158Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-feature-engineering-pipeline-03-PLAN.md
+last_updated: "2026-03-23T03:02:28.013Z"
 progress:
   total_phases: 8
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Plan: 3 of 3
 | Phase 01 P03 | 5min | 3 tasks | 4 files |
 | Phase 02 P01 | 2 min | 3 tasks | 6 files |
 | Phase 02-feature-engineering-pipeline P02 | 18 min | 2 tasks | 3 files |
+| Phase 02-feature-engineering-pipeline P03 | 2 min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Shift season features by player-season to prevent cross-season leakage.
 - [Phase 02-feature-engineering-pipeline]: Use matchup string parsing plus teams abbreviation mapping for opponent/team joins.
 - [Phase 02-feature-engineering-pipeline]: Compute matchup averages by merging prior player-opponent games constrained to current and previous season.
+- [Phase 02-feature-engineering-pipeline]: Apply min-games filtering before feature processors so downstream targets only include trainable player-seasons.
+- [Phase 02-feature-engineering-pipeline]: Use median-centered half-point threshold lines with shifted rolling windows to avoid temporal leakage in target generation.
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T02:58:20.155Z
-Stopped at: Completed 02-feature-engineering-pipeline-02-PLAN.md
+Last session: 2026-03-23T03:02:28.011Z
+Stopped at: Completed 02-feature-engineering-pipeline-03-PLAN.md
 Resume file: None
