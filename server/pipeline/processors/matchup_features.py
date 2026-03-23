@@ -28,9 +28,14 @@ def compute_matchup_features(df: pd.DataFrame, all_game_logs: pd.DataFrame) -> p
 
     all_logs["game_date"] = pd.to_datetime(all_logs["game_date"])
     all_logs["opp_abbr"] = all_logs["matchup"].apply(_extract_opponent)
-    all_logs["opp_team_id"] = all_logs["opp_abbr"].map(
-        dict(zip(out["opp_abbr"].dropna(), out["opp_team_id"].dropna()))
+    abbr_to_id = (
+        out[["opp_abbr", "opp_team_id"]]
+        .dropna(subset=["opp_abbr", "opp_team_id"])
+        .drop_duplicates(subset=["opp_abbr"])
+        .set_index("opp_abbr")["opp_team_id"]
+        .to_dict()
     )
+    all_logs["opp_team_id"] = all_logs["opp_abbr"].map(abbr_to_id)
     all_logs = all_logs[all_logs["is_dnp"] == 0].copy()
 
     current = out[["game_id", "player_id", "opp_team_id", "season", "game_date"]].copy()
