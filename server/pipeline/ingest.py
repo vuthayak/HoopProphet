@@ -27,6 +27,7 @@ from server.pipeline.collectors.schedules import collect_team_schedules
 from server.pipeline.collectors.team_stats import collect_team_stats
 from server.pipeline.collectors.game_logs import collect_player_gamelogs
 from server.pipeline.processors.dnp_synthesis import synthesize_all_dnp_rows
+from server.pipeline.features import run_feature_pipeline
 
 logger = logging.getLogger("server.pipeline.ingest")
 
@@ -158,6 +159,14 @@ def main():
         "--validate", action="store_true",
         help="Run completeness checks only, no collection",
     )
+    mode.add_argument(
+        "--features-only", action="store_true",
+        help="Run feature engineering only (skip data collection)",
+    )
+    parser.add_argument(
+        "--features", action="store_true",
+        help="Run feature engineering after data collection",
+    )
     parser.add_argument(
         "-v", "--verbose", action="store_true",
         help="Enable DEBUG logging",
@@ -175,6 +184,19 @@ def main():
     init_db(conn)
 
     try:
+        if args.features_only:
+            logger.info("Running feature engineering pipeline...")
+            start_time = time.time()
+            result = run_feature_pipeline(conn)
+            elapsed = time.time() - start_time
+            logger.info(
+                "Feature pipeline complete: %d rows, %d columns, %d stat types, %d players (%.1fs)",
+                result["rows"], result["columns"], result["stat_types"],
+                result["players"], elapsed,
+            )
+            conn.close()
+            sys.exit(0)
+
         if args.validate:
             valid = validate_completeness(conn)
             conn.close()
@@ -194,6 +216,13 @@ def main():
         _run_collection(client, conn, seasons)
 
         valid = validate_completeness(conn)
+        if args.features:
+            logger.info("Running feature engineering pipeline...")
+            result = run_feature_pipeline(conn)
+            logger.info(
+                "Feature pipeline complete: %d rows, %d columns, %d stat types, %d players",
+                result["rows"], result["columns"], result["stat_types"], result["players"],
+            )
 
         elapsed = time.time() - start_time
         logger.info("Collection completed in %.1f minutes", elapsed / 60)
