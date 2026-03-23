@@ -17,15 +17,15 @@ Requirements for V2 release. Each maps to roadmap phases.
 
 ### Feature Engineering
 
-- [ ] **FEAT-01**: System computes rolling averages per stat across L5, L10, L20 game windows
-- [ ] **FEAT-02**: System computes rolling standard deviation per stat (consistency metric)
+- [x] **FEAT-01**: System computes rolling averages per stat across L5, L10, L20 game windows
+- [x] **FEAT-02**: System computes rolling standard deviation per stat (consistency metric)
 - [ ] **FEAT-03**: System computes opponent defensive rating vs player position for each game
 - [ ] **FEAT-04**: System computes rest days and back-to-back game flags
 - [ ] **FEAT-05**: System computes home/away indicator
 - [ ] **FEAT-06**: System computes team pace and opponent pace features
-- [ ] **FEAT-07**: System computes minutes trend features (recent minutes average)
+- [x] **FEAT-07**: System computes minutes trend features (recent minutes average)
 - [ ] **FEAT-08**: System computes historical matchup stats (player's average vs specific opponent)
-- [ ] **FEAT-09**: All features use `.shift(1)` temporal guard — game N's features only contain data through game N-1
+- [x] **FEAT-09**: All features use `.shift(1)` temporal guard — game N's features only contain data through game N-1
 - [ ] **FEAT-10**: Feature matrix output as Parquet file with binary target column (over/under the line)
 
 ### Model Training
@@ -123,15 +123,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-03 | Phase 1 | Complete |
 | DATA-04 | Phase 1 | Complete |
 | DATA-05 | Phase 1 | Complete |
-| FEAT-01 | Phase 2 | Pending |
-| FEAT-02 | Phase 2 | Pending |
+| FEAT-01 | Phase 2 | Complete |
+| FEAT-02 | Phase 2 | Complete |
 | FEAT-03 | Phase 2 | Pending |
 | FEAT-04 | Phase 2 | Pending |
 | FEAT-05 | Phase 2 | Pending |
 | FEAT-06 | Phase 2 | Pending |
-| FEAT-07 | Phase 2 | Pending |
+| FEAT-07 | Phase 2 | Complete |
 | FEAT-08 | Phase 2 | Pending |
-| FEAT-09 | Phase 2 | Pending |
+| FEAT-09 | Phase 2 | Complete |
 | FEAT-10 | Phase 2 | Pending |
 | MODL-01 | Phase 3 | Pending |
 | MODL-02 | Phase 3 | Pending |
