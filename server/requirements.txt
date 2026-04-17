@@ -12,3 +12,7 @@ xgboost
 google-generativeai
 pytest>=8.0.0
 pytest-timeout>=2.2.0
+
+# Phase 3: Model Training & Calibration
+lightgbm>=4.6.0
+joblib>=1.5.0
