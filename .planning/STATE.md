@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Phase 3 discuss-phase — 03-CONTEXT.md written
+status: Planned — 3 plans ready to execute
+stopped_at: Phase 3 plan-phase — 3 PLAN.md files written
 last_updated: "2026-03-23T12:00:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 2
-  total_plans: 6
+  total_plans: 9
   completed_plans: 6
 ---
 
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2025-03-22)
 
 **Core value:** Bettors can quickly identify high-probability player props backed by data — not gut feeling — so they know which bets are worth taking.
-**Current focus:** Phase 03 — model-training-calibration (context locked; plan next)
+**Current focus:** Phase 03 — model-training-calibration (3 plans ready to execute)
 
 ## Current Position
 
 Phase: 3
-Plan: Not started (03-CONTEXT.md ready)
+Plan: 03-01-PLAN.md (Wave 1 — ready to execute)
 
 ## Performance Metrics
 
