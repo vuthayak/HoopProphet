@@ -36,6 +36,7 @@ def run_training_pipeline(
     parquet_path: str = None,
     output_path: str = None,
     min_train_seasons: int = 2,
+    metrics_dir: str = None,
 ) -> dict:
     """Execute the full training pipeline: load → split → train → calibrate → save.
 
@@ -43,6 +44,7 @@ def run_training_pipeline(
         parquet_path: Override default Parquet path.
         output_path: Override default model artifact path.
         min_train_seasons: Minimum seasons for walk-forward training window.
+        metrics_dir: Override default metrics log directory.
 
     Returns:
         Dict with training summary: best_fold, final_metrics, artifact_path.
@@ -135,29 +137,36 @@ def run_training_pipeline(
     feature_columns = get_feature_columns(df)
 
     # Step 5: Save artifact (MODL-05)
+    # Compute overall accuracy for final model on calibration set
+    y_pred_final = final_calibrator.predict_proba(X_cal)[:, 1]
+    final_accuracy = float(np.mean((y_pred_final > 0.5) == y_cal.values))
+
     final_all_metrics = all_fold_metrics + [{
         "fold": "final",
         "train_seasons": seasons,
         "n_train": len(df),
+        "n_val": len(cal_df),
         "n_calibration_samples": len(cal_df),
         "calibration_method": final_cal_info["calibration_method"],
         "log_loss": final_metrics.get("train_log_loss", 0),
         "brier_score": final_cal_info.get("brier_score_after", 0),
+        "accuracy": final_accuracy,
     }]
 
     artifact_path = save_artifact(
         model=final_model,
         calibrator=final_calibrator,
         feature_columns=feature_columns,
-        metrics={"fold_metrics": final_all_metrics, "best_fold": best_fold_idx + 1},
+        metrics={"fold_metrics": final_all_metrics, "best_fold": best_fold_idx + 1, "calibration_method": final_cal_info["calibration_method"]},
         output_path=output_path,
     )
 
     # Step 6: Save metrics log (MODL-07)
+    log_dir = metrics_dir or METRICS_LOG_DIR
     log_path = save_metrics_log(
         all_fold_metrics=final_all_metrics,
         calibration_curve_data=cal_curve,
-        output_dir=METRICS_LOG_DIR,
+        output_dir=log_dir,
     )
 
     elapsed = time.time() - start_time
