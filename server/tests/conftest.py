@@ -2,9 +2,11 @@ import os
 import shutil
 import tempfile
 
+import numpy as np
 import pandas as pd
 import pytest
 
+from server.pipeline.feature_config import ALL_TARGET_STATS, STAT_TYPE_MAP
 from server.pipeline.db.connection import get_connection
 from server.pipeline.db.queries import insert_game_logs, insert_team_stats, upsert_player, upsert_team
 from server.pipeline.db.schema import init_db
@@ -135,3 +137,60 @@ def feature_db():
     finally:
         conn.close()
         shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+@pytest.fixture
+def training_parquet(tmp_path):
+    """Create a synthetic long-format training Parquet for model pipeline tests.
+
+    Mimics the Phase 2 output: long-format with stat_type, line_value, hit,
+    plus feature columns named like rolling/contextual features.
+    """
+    rng = np.random.RandomState(42)
+
+    # 3 seasons, 10 games per player-season, 2 players, 2 target stats
+    seasons = ["2021-22", "2022-23", "2023-24"]
+    players = [203999, 2544]  # Jokic, LeBron
+    stats = ["pts", "reb"]
+    n_games = 10
+
+    rows = []
+    for season in seasons:
+        for pid in players:
+            for g in range(n_games):
+                game_date = f"{season[:4]}-{11 + g // 30:02d}-{(g % 28) + 1:02d}"
+                for stat in stats:
+                    for offset in [-0.5, 0.0, 0.5]:
+                        line = round(rng.uniform(10, 30) * 2) / 2 + offset
+                        line = max(0.5, line)
+                        hit = int(rng.random() > 0.45)
+                        row = {
+                            "player_id": pid,
+                            "game_id": f"002{season[:4]}00{g:03d}",
+                            "season": season,
+                            "game_date": game_date,
+                            "stat_type": STAT_TYPE_MAP[stat],
+                            "line_value": line,
+                            "hit": hit,
+                            # Feature columns (rolling, contextual, matchup)
+                            f"{stat}_avg_L5": rng.uniform(5, 30),
+                            f"{stat}_avg_L10": rng.uniform(5, 30),
+                            f"{stat}_std_L5": rng.uniform(1, 8),
+                            f"{stat}_season_avg": rng.uniform(10, 25),
+                            "games_played_season": g + 1,
+                            "rest_days": rng.choice([0, 1, 2, 3]),
+                            "is_back_to_back": int(rng.random() > 0.8),
+                            "is_home": int(rng.random() > 0.5),
+                            "opp_def_rating": rng.uniform(105, 115),
+                            "opp_pace": rng.uniform(95, 105),
+                            f"opp_{stat}_avg_allowed": rng.uniform(5, 25),
+                            f"{stat}_vs_opp_avg": rng.uniform(5, 25),
+                            "min_avg_L5": rng.uniform(15, 40),
+                            "min_avg_L10": rng.uniform(15, 40),
+                        }
+                        rows.append(row)
+
+    df = pd.DataFrame(rows)
+    parquet_path = str(tmp_path / "test_features.parquet")
+    df.to_parquet(parquet_path, engine="pyarrow", compression="snappy", index=False)
+    return parquet_path
