@@ -34,9 +34,9 @@ Requirements for V2 release. Each maps to roadmap phases.
 - [ ] **MODL-02**: Model uses `objective='binary'` and outputs calibrated probabilities
 - [ ] **MODL-03**: Isotonic regression calibration applied via CalibratedClassifierCV on held-out validation set
 - [ ] **MODL-04**: Model trained using temporal walk-forward split (not random k-fold)
-- [ ] **MODL-05**: Trained model + calibrator saved as single `.joblib` artifact
-- [ ] **MODL-06**: Training script runnable offline (nightly/weekly via cron or manual trigger)
-- [ ] **MODL-07**: Training logs metrics: log loss, Brier score, calibration curve data
+- [x] **MODL-05**: Trained model + calibrator saved as single `.joblib` artifact
+- [x] **MODL-06**: Training script runnable offline (nightly/weekly via cron or manual trigger)
+- [x] **MODL-07**: Training logs metrics: log loss, Brier score, calibration curve data
 
 ### Back-Testing
 
@@ -133,13 +133,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FEAT-08 | Phase 2 | Complete |
 | FEAT-09 | Phase 2 | Complete |
 | FEAT-10 | Phase 2 | Complete |
-| MODL-01 | Phase 3 | Pending |
-| MODL-02 | Phase 3 | Pending |
-| MODL-03 | Phase 3 | Pending |
-| MODL-04 | Phase 3 | Pending |
-| MODL-05 | Phase 3 | Pending |
-| MODL-06 | Phase 3 | Pending |
-| MODL-07 | Phase 3 | Pending |
+| MODL-01 | Phase 3 | Complete |
+| MODL-02 | Phase 3 | Complete |
+| MODL-03 | Phase 3 | Complete |
+| MODL-04 | Phase 3 | Complete |
+| MODL-05 | Phase 3 | Complete |
+| MODL-06 | Phase 3 | Complete |
+| MODL-07 | Phase 3 | Complete |
 | TEST-01 | Phase 4 | Pending |
 | TEST-02 | Phase 4 | Pending |
 | TEST-03 | Phase 4 | Pending |

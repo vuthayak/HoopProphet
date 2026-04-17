@@ -76,9 +76,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Foundation: training config, dataset loader, walk-forward splits
-- [ ] 03-02-PLAN.md — LightGBM binary classifier training and isotonic/Platt calibration
-- [ ] 03-03-PLAN.md — Artifact persistence, metrics logging, CLI pipeline integration
+- [x] 03-01-PLAN.md — Foundation: training config, dataset loader, walk-forward splits
+- [x] 03-02-PLAN.md — LightGBM binary classifier training and isotonic/Platt calibration
+- [x] 03-03-PLAN.md — Artifact persistence, metrics logging, CLI pipeline integration
 
 ### Phase 4: Back-Testing Engine
 
@@ -155,7 +155,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | ------------------------------- | -------------- | ----------------- | ---------- |
 | 1. Data Pipeline & Caching      | 3/3            | Complete          | 2026-03-23 |
 | 2. Feature Engineering Pipeline | 3/3            | Complete          | 2026-03-23 |
-| 3. Model Training & Calibration | 0/3            | Ready to execute  | -          |
+| 3. Model Training & Calibration | 3/3            | Complete          | 2026-04-17 |
 | 4. Back-Testing Engine          | 0/?            | Not started       | -          |
 | 5. API Layer & Prop Serving     | 0/?            | Not started       | -          |
 | 6. News & Injury Flags          | 0/?            | Not started       | -          |
