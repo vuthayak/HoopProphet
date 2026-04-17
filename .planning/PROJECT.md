@@ -21,13 +21,13 @@ Bettors can quickly identify high-probability player props backed by data — no
 
 ### Active
 
-- [ ] Unified LightGBM classification model trained across all players and props
-- [ ] Probability prediction for over/under on stat lines (not raw stat values)
+- [x] Unified LightGBM classification model trained across all players and props — Validated in Phase 3: Model Training & Calibration
+- [x] Probability prediction for over/under on stat lines (not raw stat values) — Validated in Phase 3: Model Training & Calibration
 - [ ] Dynamic prop selection — surface top 4-5 props each player is known for
 - [ ] Hit rate analysis across multiple game windows (L5, L10, L20, season)
 - [ ] Adjustable stat lines — default derived from player data, user can slide up/down
 - [x] Rich feature engineering: opponent defense, rest/schedule, recent form, consistency, matchup history, pace/tempo, minutes context — Validated in Phase 2: Feature Engineering Pipeline
-- [ ] Offline training pipeline — nightly/weekly retrain, serve from saved model artifact
+- [x] Offline training pipeline — nightly/weekly retrain, serve from saved model artifact — Validated in Phase 3: Model Training & Calibration
 - [ ] Back-testing engine to validate model accuracy against past NBA seasons
 - [ ] Keyword-based news/sentiment flags (injury, arrest, trade rumors, not playing)
 - [ ] Player search view — search a player, see their probable picks with hit rates
@@ -53,7 +53,7 @@ Bettors can quickly identify high-probability player props backed by data — no
 
 **V2 direction:** Pivot from "predict the stat" to "predict the probability of hitting a prop." One unified LightGBM model trained across all players on multi-season data. Core audience is sports bettors who want data-backed prop picks.
 
-**Current state:** Phase 2 complete. The offline feature engineering pipeline now produces a leakage-safe, long-format Parquet training dataset with rolling/statistical/contextual/matchup features and binary over/under targets.
+**Current state:** Phase 3 complete. A single unified LightGBM binary classifier is trained across all players and prop types with isotonic calibration (Platt fallback). Walk-forward temporal splits prevent leakage. Model + calibrator saved as a single .joblib artifact. Offline CLI training pipeline logs log loss, Brier score, and calibration curves.
 
 **Technical debt from V1:**
 - Monolithic frontend (single App.js, no components)
@@ -78,10 +78,10 @@ Bettors can quickly identify high-probability player props backed by data — no
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Pivot to probability prediction | Bettors care about "will it hit?" not exact stat values | — Pending |
-| Single unified LightGBM model | Per-player models had tiny training sets (~60 rows); unified model gets 100K+ rows | — Pending |
-| Binary classification framing | Directly outputs the probability users need; avoids indirect raw-stat prediction | — Pending |
-| Offline training pipeline | V1's per-request training was slow and expensive; serve from saved model | — Pending |
+| Pivot to probability prediction | Bettors care about "will it hit?" not exact stat values | Validated — Phase 3 |
+| Single unified LightGBM model | Per-player models had tiny training sets (~60 rows); unified model gets 100K+ rows | Validated — Phase 3 |
+| Binary classification framing | Directly outputs the probability users need; avoids indirect raw-stat prediction | Validated — Phase 3 |
+| Offline training pipeline | V1's per-request training was slow and expensive; serve from saved model | Validated — Phase 3 |
 | Drop Gemini summaries | Users want data, not AI-generated text; reduces external dependencies | — Pending |
 | Keyword news search over full NLP | Simpler, faster, and captures the high-value signals (injury, out) without complexity | — Pending |
 | Multi-season training data | More data = better generalization; enables back-testing against held-out seasons | Validated — Phase 1 |
@@ -104,4 +104,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-23 after Phase 2 completion — Feature Engineering Pipeline*
+*Last updated: 2026-04-17 after Phase 3 completion — Model Training & Calibration*
