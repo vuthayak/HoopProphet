@@ -1,92 +1,94 @@
 # Technology Stack
 
-**Analysis Date:** 2025-03-22
+**Analysis Date:** 2026-04-17
 
 ## Languages
 
 **Primary:**
-- **JavaScript (ES modules / JSX)** — React UI in `hoopprophet/src/` (`App.js`, `index.js`).
-- **Python 3.11** — FastAPI API and ML pipeline in `server/` (`app.py`, `server/ml/`).
+- Python 3.11 — Backend API, ML pipeline, data processing (`server/`)
+- JavaScript (ES6+) — Frontend React single-page application (`hoopprophet/src/`)
 
 **Secondary:**
-- **CSS-in-JS** — Emotion + MUI `sx` styling in `hoopprophet/src/App.js` (no separate CSS preprocessor detected).
+- SQL (SQLite dialect) — Database schema definition (`server/pipeline/db/schema.py`)
+- YAML — Docker Compose orchestration (`docker-compose.yml`)
+- HTML — SPA shell (`hoopprophet/public/index.html`)
 
 ## Runtime
 
 **Environment:**
-- **Node.js 20** — Declared by `hoopprophet/Dockerfile` (`FROM node:20-alpine`).
-- **Python 3.11** — Declared by `server/Dockerfile` (`FROM python:3.11-slim`).
+- Python 3.11-slim (Docker backend base image) — `server/Dockerfile`
+- Node.js 20 Alpine (Docker frontend base image) — `hoopprophet/Dockerfile`
 
-**Package Manager:**
-- **npm** — Frontend; lockfile present at `hoopprophet/package-lock.json`.
-- **pip** — Backend; `server/requirements.txt` lists dependencies **without pinned versions** (installs latest compatible at install time).
+**Package Managers:**
+- pip — Python dependencies (`server/requirements.txt`)
+- npm — JavaScript dependencies (`hoopprophet/package.json`, `hoopprophet/package-lock.json`)
+- Lockfile: `hoopprophet/package-lock.json` present
 
 ## Frameworks
 
 **Core:**
-- **React 19.x** — UI (`hoopprophet/package.json`: `react`, `react-dom`).
-- **Create React App / react-scripts 5.0.1** — Dev server, build, and Jest test runner (`hoopprophet/package.json` scripts: `start`, `build`, `test`).
-- **FastAPI** — HTTP API (`server/app.py`).
-- **Uvicorn** — ASGI server for FastAPI (`server/Dockerfile` `CMD`, `server/app.py` `__main__` block).
-- **Pydantic v2** (via FastAPI) — Request/response models in `server/app.py` (`BaseModel`).
+- FastAPI — Python async web framework serving the backend API (`server/app.py`)
+- React 19.1.0 — Frontend UI library (`hoopprophet/src/App.js`)
+- Material-UI (MUI) 7.2.0 — React component library for UI (`hoopprophet/src/App.js`)
+- uvicorn — ASGI server for FastAPI (`server/Dockerfile`, `server/app.py`)
 
-**UI / UX:**
-- **Material UI (MUI) 7.x** — Components and theming (`hoopprophet/package.json`: `@mui/material`, `@mui/icons-material`).
-- **Emotion 11.x** — CSS-in-JS peer for MUI (`@emotion/react`, `@emotion/styled`).
-- **Framer Motion 12.x** — Animation (`hoopprophet/src/App.js`).
-
-**ML / Data:**
-- **pandas** — DataFrames throughout `server/ml/` and `server/app.py`.
-- **NumPy** — Used in `server/ml/dataset.py` (imported alongside pandas).
-- **scikit-learn** — Pipelines, `LinearRegression`, `RepeatedKFold`, `cross_val_score`, `StandardScaler` (`server/ml/model_train.py`).
-- **XGBoost** — `XGBRegressor` in `server/ml/model_train.py`.
-- **nba_api** — Python client for NBA Stats endpoints (`server/ml/dataset.py`, `server/ml/prop_line.py`, `server/app.py`).
-
-**AI:**
-- **google-generativeai** — Gemini API client (`server/ml/model_train.py`: `import google.generativeai as genai`).
+**Machine Learning:**
+- scikit-learn — sklearn pipelines, cross-validation, StandardScaler, LinearRegression (`server/ml/model_train.py`)
+- XGBoost — XGBRegressor for prediction models (`server/ml/model_train.py`)
+- pandas 2.2+ / numpy 2.1+ — Data manipulation throughout backend (`server/ml/dataset.py`, `server/pipeline/features.py`)
+- pyarrow 19+ — Parquet file I/O for feature matrix (`server/pipeline/features.py`)
 
 **Testing:**
-- **Jest** (via `react-scripts test`) — `hoopprophet/package.json` script `test`.
-- **React Testing Library** — `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `@testing-library/dom` in `hoopprophet/package.json`.
+- pytest 8+ — Python test framework (`pyproject.toml`, `server/tests/`)
+- pytest-timeout 2.2+ — Test timeout enforcement (`pyproject.toml`)
+- React Testing Library — Frontend component testing (`hoopprophet/package.json`)
 
-**Build / Dev:**
-- **Production static serve** — `hoopprophet/Dockerfile` runs `npm run build` then `npx serve -s build -l 3000` (the `serve` package is invoked via `npx`, not listed in `hoopprophet/package.json`).
-- **Docker Compose 3.9** — Orchestration (`docker-compose.yml`).
+**Build/Dev:**
+- react-scripts 5.0.1 — CRA build toolchain (`hoopprophet/package.json`)
+- Docker Compose 3.9 — Multi-container orchestration (`docker-compose.yml`)
 
 ## Key Dependencies
 
 **Critical:**
-- `fastapi` + `uvicorn` — API surface and process model (`server/app.py`).
-- `nba_api` — All live/static NBA data used for players, teams, game logs, career stats (`server/ml/dataset.py`, `server/ml/prop_line.py`, `server/app.py`).
-- `pandas` — Shared data layer between API and ML.
-- `scikit-learn`, `xgboost` — Training and prediction in `server/ml/model_train.py`.
-- `google-generativeai` — Natural-language model summaries in `generate_model_summary()` (`server/ml/model_train.py`).
+- nba_api 1.11.4 — Official NBA stats API wrapper; primary data source for all player/team/game data (`server/requirements.txt`, `server/ml/dataset.py`, `server/pipeline/nba_client.py`)
+- google-generativeai — Google Gemini 2.0 Flash API for AI-powered model summaries (`server/ml/model_train.py`)
+- requests-cache 1.3.1 — HTTP response caching for NBA API calls (`server/pipeline/nba_client.py`)
+- tenacity 9+ — Retry logic with exponential backoff for NBA API calls (`server/pipeline/nba_client.py`)
+- tqdm 4.66+ — Progress bars for long-running collection processes (`server/requirements.txt`)
 
 **Infrastructure:**
-- `react`, `react-dom`, `react-scripts` — SPA shell and toolchain (`hoopprophet/`).
-- `@mui/material`, `@emotion/react`, `@emotion/styled` — UI system (`hoopprophet/src/App.js`).
+- Pydantic — Request/response models and validation in FastAPI (`server/app.py`)
+- SQLite (stdlib) — Local database for data pipeline storage (`server/pipeline/db/connection.py`)
+- framer-motion 12.23+ — Animation library for React UI transitions (`hoopprophet/src/App.js`)
 
 ## Configuration
 
 **Environment:**
-- **Backend:** `GEMINI_API_KEY` read in `server/ml/model_train.py` (`os.getenv('GEMINI_API_KEY')`). Passed through `docker-compose.yml` from host environment (`.env` at project root is documented in `README.md`; do not commit secrets).
-- **Frontend:** `REACT_APP_API_BASE` — Base URL for API calls (`hoopprophet/src/App.js`: `process.env.REACT_APP_API_BASE || "http://localhost:8000"`). Set in `docker-compose.yml` for the `frontend` service as `http://backend:8000`.
-- **Development proxy:** `hoopprophet/package.json` sets `"proxy": "http://backend:8000"` for CRA dev server when using Docker service names (local dev typically uses `REACT_APP_API_BASE` or localhost as documented in `README.md`).
+- `GEMINI_API_KEY` — Required for AI model summary generation; set via `.env` file or Docker env (`server/ml/model_train.py`, `docker-compose.yml`)
+- `REACT_APP_API_BASE` — Backend API base URL for frontend; defaults to `http://localhost:8000`, set to `http://backend:8000` in Docker (`hoopprophet/src/App.js`, `docker-compose.yml`)
 
 **Build:**
-- **Frontend:** CRA defaults; entry `hoopprophet/src/index.js`, HTML shell `hoopprophet/public/index.html`.
-- **Backend:** `server/Dockerfile` copies `requirements.txt` then application tree; no `pyproject.toml` or pinned transitive lockfile.
-- **Compose:** `docker-compose.yml` — builds `server` and `hoopprophet` images, maps ports `8000` (backend) and `3000` (frontend).
+- `hoopprophet/package.json` — Frontend dependency config with ESLint (react-app preset) and proxy setting
+- `server/requirements.txt` — Python pinned/minimum versions
+- `pyproject.toml` — pytest config (testpaths, timeout)
+- `docker-compose.yml` — Multi-service orchestration (backend:8000, frontend:3000)
 
 ## Platform Requirements
 
 **Development:**
-- **Docker** and **Docker Compose** — Primary path in `README.md` (`docker-compose up --build`).
-- **Alternative:** Local Node + npm in `hoopprophet/`; Python venv + `pip install -r server/requirements.txt` + `uvicorn` in `server/` (`README.md`).
+- Python 3.11+ with pip
+- Node.js 20+ with npm
+- Docker Desktop (for containerized dev)
+- Gemini API key for AI summary feature
 
 **Production:**
-- **Containerized** — Two images (Python API + Node build served as static files). No separate production hosting config (e.g. Kubernetes, serverless) in-repo; targets are the Dockerized Node 20 and Python 3.11 images above.
+- Docker Compose orchestrates both services
+- Backend exposed on port 8000 (FastAPI/Uvicorn)
+- Frontend served via `npx serve` on port 3000 (static React build)
+- SQLite database persisted in `server/data/hoopprophet.db`
+- HTTP cache for NBA API stored in `server/data/nba_cache`
+- Feature matrix Parquet file in `server/data/features.parquet`
 
 ---
 
-*Stack analysis: 2025-03-22*
+*Stack analysis: 2026-04-17*

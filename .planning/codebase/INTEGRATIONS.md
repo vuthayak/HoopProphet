@@ -1,82 +1,109 @@
 # External Integrations
 
-**Analysis Date:** 2025-03-22
+**Analysis Date:** 2026-04-17
 
 ## APIs & External Services
 
-**NBA statistics (stats.nba.com via Python client):**
-- **nba_api** — Unofficial Python wrapper around NBA Stats HTTP endpoints. Used for:
-  - Static player/team lists: `get_players`, `get_teams` (`server/app.py`, `server/ml/dataset.py`, `server/ml/prop_line.py`).
-  - Game and career data: `playergamelog`, `teamgamelog`, `commonplayerinfo`, `boxscoresummaryv2`, `playercareerstats` (`server/ml/dataset.py`, `server/ml/prop_line.py`).
-- **SDK/Client:** Package `nba_api` (`server/requirements.txt`).
-- **Auth:** None for NBA Stats public endpoints (rate limiting and availability depend on NBA infrastructure; `server/ml/dataset.py` uses `time.sleep` between some calls).
+**NBA Stats API:**
+- nba_api (Python package v1.11.4) — Primary data source for all NBA player, team, game, and schedule data
+  - SDK: `nba_api` (`server/requirements.txt`)
+  - Auth: None required (public API)
+  - Usage areas:
+    - Player search and info: `nba_api.stats.static.players.get_players()` (`server/app.py`, `server/ml/dataset.py`, `server/ml/prop_line.py`)
+    - Team search and info: `nba_api.stats.static.teams.get_teams()` (`server/app.py`, `server/pipeline/nba_client.py`)
+    - Player game logs: `nba_api.stats.endpoints.playergamelog` (`server/ml/dataset.py`, `server/pipeline/nba_client.py`)
+    - Player career stats: `nba_api.stats.endpoints.playercareerstats` (`server/ml/prop_line.py`)
+    - Common player info: `nba_api.stats.endpoints.commonplayerinfo` (`server/ml/dataset.py`)
+    - Box score summaries: `nba_api.stats.endpoints.boxscoresummaryv2` (`server/ml/dataset.py`)
+    - Team game logs: `nba_api.stats.endpoints.teamgamelog` (`server/ml/dataset.py`)
+    - Team rosters: `nba_api.stats.endpoints.commonteamroster` (`server/pipeline/nba_client.py`)
+    - Team schedules: `nba_api.stats.endpoints.leaguegamefinder` (`server/pipeline/nba_client.py`)
+    - Team advanced stats: `nba_api.stats.endpoints.leaguedashteamstats` (`server/pipeline/nba_client.py`)
+  - Rate limiting: Built-in 0.6s minimum delay + exponential backoff retry (5 attempts) in `NBAClient` class (`server/pipeline/nba_client.py`)
+  - Caching: `requests-cache` with SQLite backend, stale-if-error policy (`server/pipeline/nba_client.py`)
 
 **Google Generative AI (Gemini):**
-- **Purpose:** Natural-language summaries of cross-validated model metrics after each prediction (`server/ml/model_train.py` — `generate_model_summary()`).
-- **SDK/Client:** `google.generativeai` (`import google.generativeai as genai`).
-- **Auth:** API key via environment variable **`GEMINI_API_KEY`** (`server/ml/model_train.py`; wired in `docker-compose.yml` from `${GEMINI_API_KEY}`).
-- **Model identifier in code:** `genai.GenerativeModel('gemini-2.0-flash-exp')` (`server/ml/model_train.py`). Product marketing in `README.md` references “Gemini 2.5 Flash”; implementers should treat the **code** as the source of truth for the active model name.
+- Gemini 2.0 Flash Exp — AI-generated model performance summaries after predictions
+  - SDK: `google-generativeai` (`server/requirements.txt`)
+  - Auth: `GEMINI_API_KEY` environment variable (`server/ml/model_train.py`)
+  - Model: `gemini-2.0-flash-exp` (hardcoded in `generate_model_summary()`)
+  - Usage: Generates 150-word betting perspective analysis of ML model metrics
+  - Graceful degradation: Returns "Model summary unavailable" message if API key not set
 
-**Browser → backend:**
-- **Purpose:** SPA loads player/team lists and posts prediction requests.
-- **Mechanism:** `fetch()` to `${API_BASE}/players`, `/teams`, `/predict` (`hoopprophet/src/App.js`).
-- **Auth:** None (open CORS for configured origins only — see below).
+**CDN — NBA Headshots & Logos:**
+- Player headshots: `https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id}.png` (`hoopprophet/src/App.js`)
+- Team logos: `https://cdn.nba.com/logos/nba/{team_id}/primary/L/logo.svg` (`hoopprophet/src/App.js`)
+- Auth: None (public CDN)
+
+**Google Fonts:**
+- "Special Gothic Expanded One" — Display font loaded via Google Fonts CSS API (`hoopprophet/public/index.html`)
 
 ## Data Storage
 
 **Databases:**
-- **None** — No SQL/NoSQL client, ORM, or connection string in application code. All data is fetched on demand from NBA APIs and held in memory as pandas objects.
+- SQLite — Local file-based relational database
+  - Connection: File path `server/data/hoopprophet.db` (`server/pipeline/__init__.py`)
+  - Client: Python stdlib `sqlite3` module (`server/pipeline/db/connection.py`)
+  - Mode: WAL journal mode, foreign keys enabled
+  - Tables: `players`, `teams`, `player_game_logs`, `team_stats`, `team_rosters`, `team_schedules`, `collection_progress`
+  - Schema defined in: `server/pipeline/db/schema.py`
 
 **File Storage:**
-- **Local filesystem only** — Optional CSV writes in `server/ml/prop_line.py` `__main__` block (`../data/prop_line.csv`); not part of the FastAPI request path.
+- Parquet feature matrix: `server/data/features.parquet` — Pre-computed ML feature store written by `server/pipeline/features.py`
+- HTTP cache: `server/data/nba_cache` — SQLite-based HTTP response cache for NBA API
+- Gitkeep: `server/data/.gitkeep` — Ensures data directory is tracked
 
 **Caching:**
-- **None** — No Redis, in-memory cache layer, or CDN integration in code.
+- requests-cache — SQLite-backed HTTP cache for NBA API responses (`server/pipeline/nba_client.py`)
+  - Backend: SQLite
+  - Policy: No expiration (`expire_after=None`), stale-if-error
+  - Allowable methods: GET, POST
+  - Session injected into `NBAStatsHTTP` for transparent caching
 
 ## Authentication & Identity
 
 **Auth Provider:**
-- **None** — No login, JWT, OAuth, or session handling. The API is intended for local or trusted network use unless extended.
-
-**CORS:**
-- **FastAPI `CORSMiddleware`** (`server/app.py`) allows origins `http://localhost:3000` and `http://frontend:3000` with credentials, all methods and headers.
+- None — The application has no user authentication. All API endpoints are publicly accessible.
 
 ## Monitoring & Observability
 
 **Error Tracking:**
-- **None** — No Sentry, Datadog, or similar SDK.
+- None configured
 
 **Logs:**
-- **Print statements** — Verbose `print` logging in `server/app.py` (predict flow) and ML modules (`server/ml/model_train.py`, `server/ml/dataset.py`, `server/ml/prop_line.py`).
-- **Frontend:** `console.log` / `console.error` in `hoopprophet/src/App.js` for fetch debugging and errors.
+- Python `logging` module — Structured logging in pipeline module (`server/pipeline/nba_client.py`, `server/pipeline/ingest.py`)
+- Console print statements — Debug logging in `server/app.py` and `server/ml/model_train.py` (emoji-prefixed step indicators)
+- Frontend: `console.log` / `console.error` — Browser console logging (`hoopprophet/src/App.js`)
 
 ## CI/CD & Deployment
 
 **Hosting:**
-- **Docker Compose** — Local/dev-style orchestration (`docker-compose.yml`). No cloud provider manifest in-repo.
+- Docker Compose — Local multi-container deployment
+  - Backend: Python 3.11-slim container, uvicorn serving FastAPI on port 8000
+  - Frontend: Node 20 Alpine container, static build served via `npx serve` on port 3000
+  - Backend volume mount: `./server:/app` for hot-reload development
 
 **CI Pipeline:**
-- **Not detected** — No `.github/workflows/` or similar CI configuration in the repository.
+- None configured
 
 ## Environment Configuration
 
-**Required env vars (for full functionality):**
-- **`GEMINI_API_KEY`** — Required for non-placeholder AI summaries in `generate_model_summary()`; if unset, API still runs but returns a string stating the key is missing (`server/ml/model_train.py`).
-
-**Optional / deployment-specific:**
-- **`REACT_APP_API_BASE`** — Backend origin for the React app (`hoopprophet/src/App.js`). Defaults to `http://localhost:8000` when unset.
+**Required env vars:**
+- `GEMINI_API_KEY` — Google Gemini API key for AI model summaries (required for /predict endpoint AI summary)
+- `REACT_APP_API_BASE` — Backend URL for frontend API calls (defaults to `http://localhost:8000`)
 
 **Secrets location:**
-- **`.env` at project root** — Documented in `README.md` for `GEMINI_API_KEY`; file should remain untracked (see `README.md` / `.gitignore` patterns). Never commit secret values.
+- `.env` file at project root (gitignored) — Contains `GEMINI_API_KEY`
+- Docker Compose passes `GEMINI_API_KEY` and `REACT_APP_API_BASE` to containers
 
 ## Webhooks & Callbacks
 
 **Incoming:**
-- **None** — No Stripe webhooks, GitHub hooks, or similar HTTP callback endpoints.
+- None
 
 **Outgoing:**
-- **None** — No registered webhooks to third parties. The app only performs request/response calls: browser → FastAPI, FastAPI → NBA Stats (via `nba_api`), FastAPI → Gemini API.
+- None
 
 ---
 
-*Integration audit: 2025-03-22*
+*Integration audit: 2026-04-17*
