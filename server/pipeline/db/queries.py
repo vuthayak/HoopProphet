@@ -107,7 +107,7 @@ def get_team_stats_df(conn: sqlite3.Connection) -> pd.DataFrame:
 
 def get_players_df(conn: sqlite3.Connection) -> pd.DataFrame:
     return pd.read_sql_query(
-        "SELECT player_id, full_name, position, team_id FROM players",
+        "SELECT player_id, full_name, is_active, position, team_id FROM players",
         conn,
     )
 
