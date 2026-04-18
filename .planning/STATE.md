@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 5 Plan 01 complete — V2 FastAPI with model preload, SQLite services, all 23 tests passing
-stopped_at: Phase 5 Plan 01 complete
-last_updated: "2026-04-18T15:05:00Z"
+status: Phase 5 Plan 03 complete — V1 cleanup, 86 Phase 5 tests passing, integration test suite created
+stopped_at: Phase 5 Plan 03 complete — ready for Phase 06
+last_updated: "2026-04-18T15:30:00Z"
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -30,9 +30,9 @@ Plan: 05-01-PLAN.md (completed — Phase 5 started)
 
 **Velocity:**
 
-- Total plans completed: 9
+- Total plans completed: 11
 - Average duration: ~5min
-- Total execution time: ~42min
+- Total execution time: ~52min
 
 **By Phase:**
 
@@ -53,6 +53,8 @@ Plan: 05-01-PLAN.md (completed — Phase 5 started)
 | Phase 02-feature-engineering-pipeline P02 | 18 min | 2 tasks | 3 files |
 | Phase 03 P03 | 4min | 3 tasks | 6 files |
 | Phase 05 P01 | 7min | 1 task | 10 files |
+| Phase 05 P02 | ~5min | 2 tasks | 11 files |
+| Phase 05 P03 | ~5min | 1 task | 2 files |
 
 ## Accumulated Context
 
@@ -80,6 +82,7 @@ Recent decisions affecting current work:
 - [Phase 03 P03]: Added metrics_dir override to run_training_pipeline for test isolation
 - [Phase 03 P03]: Passed calibration_method at top level of metrics dict for artifact metadata extraction
 - [Phase 03]: Isotonic regression preferred for calibration, Platt sigmoid fallback when data is insufficient
+- [Phase 05 P03]: Removed xgboost and google-generativeai from requirements.txt (V1 cleanup per CLNP-01)
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-18T15:05:00Z
-Stopped at: Phase 5 Plan 01 complete (05-01-SUMMARY.md)
+Last session: 2026-04-18T15:30:00Z
+Stopped at: Phase 5 Plan 03 complete (05-03-SUMMARY.md) — ready for Phase 06
 Resume file: None
