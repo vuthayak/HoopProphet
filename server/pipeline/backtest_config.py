@@ -2,6 +2,7 @@
 
 import os
 from server.pipeline import DATA_DIR
+from server.pipeline.feature_config import ALL_TARGET_STATS
 
 # Standard -110 sportsbook vig: win $100 on a $110 bet → 100/110 ≈ 0.909 profit per unit.
 VIG_MULTIPLIER = 100 / 110  # ≈ 0.909
