@@ -6,7 +6,7 @@ source:
   - .planning/phases/04-back-testing-engine/04-02-SUMMARY.md
   - .planning/phases/04-back-testing-engine/04-03-SUMMARY.md
 started: 2026-04-18T05:52:00Z
-updated: 2026-04-18T05:59:00Z
+updated: 2026-04-18T10:10:00Z
 ---
 
 ## Current Test
@@ -25,21 +25,15 @@ result: pass
 
 ### 3. End-to-End Pipeline with Synthetic Data
 expected: `python -m server.pipeline.backtest_cli --backtest` runs successfully using synthetic training data and produces JSON + Parquet output files in BACKTEST_METRICS_DIR
-result: issue
-reported: "ValueError: Need at least 3 seasons for walk-forward back-test, got 0 ([])"
-severity: major
+result: pass
 
 ### 4. JSON Output Structure
 expected: JSON output contains all required sections: backtest_metadata (n_folds, seasons, breakeven_threshold), fold_metrics, season_breakdown, overall_calibration, per_stat_calibration, roi, confidence_intervals
-result: blocked
-blocked_by: prior-phase
-reason: "Pipeline fails before producing output - depends on fixing Test 3"
+result: pass
 
 ### 5. Parquet Output Columns
 expected: Parquet file contains per-prediction rows with columns: player_id, game_id, season, stat_type, line_value, hit, predicted_proba, fold
-result: blocked
-blocked_by: prior-phase
-reason: "Pipeline fails before producing output - depends on fixing Test 3"
+result: pass
 
 ### 6. Calibration Curves Computed
 expected: compute_overall_calibration and compute_per_stat_calibration return valid calibration curve data (fraction_positives, mean_predicted_value, bin_counts, ece)
@@ -56,16 +50,16 @@ result: pass
 ## Summary
 
 total: 8
-passed: 5
-issues: 1
+passed: 8
+issues: 0
 pending: 0
 skipped: 0
-blocked: 2
+blocked: 0
 
 ## Gaps
 
 - truth: "CLI runs end-to-end with synthetic or default data and produces JSON + Parquet output"
-  status: failed
+  status: resolved
   reason: "User reported: ValueError: Need at least 3 seasons for walk-forward back-test, got 0 ([])"
   severity: major
   test: 3
@@ -77,3 +71,4 @@ blocked: 2
       issue: "File exists but has 0 data rows"
   missing:
     - "Either: create non-empty features.parquet with real/synthetic season data, OR add synthetic data fallback to CLI, OR detect empty parquet early and provide helpful error"
+  resolution: "Added synthetic data fallback: when parquet is empty or has < min_train_seasons+1 seasons, CLI auto-generates synthetic training data in memory. Also added --synthetic flag to force synthetic data. Output files created successfully."
