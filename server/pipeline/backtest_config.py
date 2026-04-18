@@ -1,5 +1,8 @@
 """Configuration constants for the back-test pipeline."""
 
+import os
+from server.pipeline import DATA_DIR
+
 # Standard -110 sportsbook vig: win $100 on a $110 bet → 100/110 ≈ 0.909 profit per unit.
 VIG_MULTIPLIER = 100 / 110  # ≈ 0.909
 
@@ -14,3 +17,9 @@ CONFIDENCE_LEVEL = 0.95
 
 # Number of bootstrap resamples for confidence intervals.
 BOOTSTRAP_SAMPLES = 1000
+
+# Minimum seasons required for walk-forward training window.
+MIN_TRAIN_SEASONS = 2
+
+# Directory for back-test metrics output.
+BACKTEST_METRICS_DIR = os.path.join(DATA_DIR, "backtest_logs")
