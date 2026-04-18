@@ -72,20 +72,12 @@ def health_check():
     }
 
 
-# Routers registered in subsequent plans
-try:
-    from server.api.players import router as players_router
+# V2 API routers
+from server.api.players import router as players_router
+from server.api.teams import router as teams_router
 
-    app.include_router(players_router)
-except ImportError:
-    pass
-
-try:
-    from server.api.teams import router as teams_router
-
-    app.include_router(teams_router)
-except ImportError:
-    pass
+app.include_router(players_router)
+app.include_router(teams_router)
 
 
 if __name__ == "__main__":
