@@ -122,21 +122,31 @@ Plans:
 1. System searches for and finds player news matching injury/trade/arrest/availability keywords
 2. Players with active alerts are flagged with alert type, source, and recency
 3. News flags are accessible via API for display on player pages
-**Plans**: TBD
+**Plans:** 3 plans
 
-### Phase 7: Frontend Rebuild
+Plans:
+- [ ] 04-01-PLAN.md — Core back-test engine: walk-forward evaluation loop and per-prediction collection
+- [ ] 04-02-PLAN.md — Back-test metrics: calibration curves, season breakdown, vig-adjusted ROI, confidence intervals
+- [ ] 04-03-PLAN.md — CLI orchestration, JSON/Parquet output, and end-to-end integration
 
-**Goal**: Users interact with a modern, component-based frontend to analyze player props and model performance
-**Depends on**: Phase 5, Phase 6
-**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-07, UI-08, PROP-03
+### Phase 5: API Layer & Prop Serving
+
+**Goal**: Backend API serves prop predictions, hit rates, and player data from cached artifacts
+**Depends on**: Phase 3, Phase 4
+**Requirements**: PROP-01, PROP-02, PROP-04, PROP-05, PROP-06, CLNP-02, CLNP-03
 **Success Criteria** (what must be TRUE):
 
-1. Frontend uses a component-based architecture with separate pages and reusable components (not monolithic App.js)
-2. User can search for any active NBA player via autocomplete and land on a player analysis page
-3. Player page shows prop cards with hit rate bar charts, ML probability, adjustable stat line slider, and recent game log
-4. Player page shows news/injury flags when alerts exist
-5. Back-test page displays model accuracy and calibration metrics
-**Plans**: TBD
+1. API loads the trained model artifact at startup and serves predictions without per-request training
+2. Player and team data is served from SQLite cache, not live NBA API calls
+3. User can retrieve hit rates across L5, L10, L20, and season windows for any player's props
+4. API returns top 4-5 props per player ranked by probability, with default stat lines
+5. API serves recent game log data for any player
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Refactored FastAPI app: config, services, player/team/game-log endpoints, model preloading (CLNP-02, CLNP-03, PROP-06)
+- [ ] 05-02-PLAN.md — Prop computation services: hit rates, default lines, prediction serving, top-prop ranking (PROP-01, PROP-02, PROP-04, PROP-05)
+- [ ] 05-03-PLAN.md — Prediction API endpoints and full app integration (PROP-01, PROP-02, PROP-04, PROP-05, PROP-06)
 **UI hint**: yes
 
 ### Phase 8: Polish & Hardening
@@ -161,8 +171,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 1. Data Pipeline & Caching      | 3/3            | Complete          | 2026-03-23 |
 | 2. Feature Engineering Pipeline | 3/3            | Complete          | 2026-03-23 |
 | 3. Model Training & Calibration | 3/3            | Complete          | 2026-04-17 |
-| 4. Back-Testing Engine          | 0/?            | Not started       | -          |
-| 5. API Layer & Prop Serving     | 0/?            | Not started       | -          |
+| 4. Back-Testing Engine          | 3/3            | Complete          | 2026-04-18 |
+| 5. API Layer & Prop Serving     | 0/3            | Not started       | -          |
 | 6. News & Injury Flags          | 0/?            | Not started       | -          |
 | 7. Frontend Rebuild             | 0/?            | Not started       | -          |
 | 8. Polish & Hardening           | 0/?            | Not started       | -          |
