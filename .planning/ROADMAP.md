@@ -91,7 +91,12 @@ Plans:
 2. Calibration curves show predicted vs. observed hit rates
 3. Season-by-season accuracy breakdown is available
 4. ROI metrics are vig-adjusted using the 52.4% breakeven threshold
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Core back-test engine: walk-forward evaluation loop and per-prediction collection
+- [ ] 04-02-PLAN.md — Back-test metrics: calibration curves, season breakdown, vig-adjusted ROI, confidence intervals
+- [ ] 04-03-PLAN.md — CLI orchestration, JSON/Parquet output, and end-to-end integration
 
 ### Phase 5: API Layer & Prop Serving
 
