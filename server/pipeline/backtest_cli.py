@@ -19,7 +19,7 @@ import logging
 import os
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict
 
 from server.pipeline.backtest import run_backtest
@@ -84,7 +84,7 @@ def run_backtest_pipeline(
     ci = compute_confidence_intervals(predictions_df)
 
     # Step 3: Build JSON output structure per D-01
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
     # n_predictions_per_stat
     stat_counts: Dict[str, int] = {}
