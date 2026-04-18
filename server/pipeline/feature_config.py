@@ -32,6 +32,8 @@ COMBO_STATS = {
 
 ALL_TARGET_STATS = ["pts", "reb", "ast", "stl", "blk", "fg3m", "pra", "pa", "pr", "min"]
 STAT_TYPE_MAP = {stat: idx for idx, stat in enumerate(ALL_TARGET_STATS)}
+# Reverse mapping: stat type index → human-readable stat name
+STAT_TYPE_NAMES = {idx: stat for stat, idx in STAT_TYPE_MAP.items()}
 
 WINDOWS_PRIMARY = [5, 10, 20]
 WINDOWS_SECONDARY = [5, 10]
