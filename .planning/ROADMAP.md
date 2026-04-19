@@ -128,7 +128,11 @@ Plans:
 1. System searches for and finds player news matching injury/trade/arrest/availability keywords
 2. Players with active alerts are flagged with alert type, source, and recency
 3. News flags are accessible via API for display on player pages
-**Plans:** TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — News data layer: SQLite schema, NewsService, RSS/injury report fetching, keyword matching
+- [ ] 06-02-PLAN.md — News API endpoints: /players/{id}/news, embedded alerts, integration tests
 
 ### Phase 8: Polish & Hardening
 
@@ -154,7 +158,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 3. Model Training & Calibration | 3/3            | Complete          | 2026-04-17 |
 | 4. Back-Testing Engine          | 3/3            | Complete          | 2026-04-18 |
 | 5. API Layer & Prop Serving     | 0/3            | Planned           | -          |
-| 6. News & Injury Flags          | 0/?            | Not started       | -          |
+| 6. News & Injury Flags          | 0/2            | Planned           | -          |
 | 7. Frontend Rebuild             | 0/?            | Not started       | -          |
 | 8. Polish & Hardening           | 0/?            | Not started       | -          |
 

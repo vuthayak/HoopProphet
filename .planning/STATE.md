@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 5 Plan 03 complete — V1 cleanup, 86 Phase 5 tests passing, integration test suite created
-stopped_at: Phase 5 Plan 03 complete — ready for Phase 06
-last_updated: "2026-04-18T15:30:00Z"
+status: Phase 6 Planned — 2 plans in 2 waves
+stopped_at: Phase 6 Planned — ready to execute
+last_updated: "2026-04-19T00:00:00Z"
 progress:
   total_phases: 8
   completed_phases: 3
-  total_plans: 12
+  total_plans: 14
   completed_plans: 11
 ---
 
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2025-03-22)
 
 **Core value:** Bettors can quickly identify high-probability player props backed by data — not gut feeling — so they know which bets are worth taking.
-**Current focus:** Phase 5 — API Layer & Prop Serving. Plan 01 complete, ready for Plan 02 (player/team routers).
+**Current focus:** Phase 6 — News & Injury Flags. 2 plans created, ready to execute.
 
 ## Current Position
 
-Phase: 5
-Plan: 05-01-PLAN.md (completed — Phase 5 started)
+Phase: 6
+Plan: 06-01-PLAN.md (ready to execute)
 
 ## Performance Metrics
 
