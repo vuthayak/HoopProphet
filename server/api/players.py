@@ -18,6 +18,7 @@ from server.services.player_service import (
     search_players,
     get_player_by_id,
     get_player_game_logs,
+    get_player_alerts_summary,
 )
 from server.services.prediction_service import (
     get_player_props,
@@ -46,7 +47,7 @@ def list_players(
 
 @router.get("/players/{player_id}")
 def get_player(player_id: int):
-    """Single player detail with default lines.
+    """Single player detail with default lines and alert summary per D-09.
 
     Raises 404 if player not found per D-12.
     """
@@ -60,7 +61,9 @@ def get_player(player_id: int):
     except ValueError:
         lines = {}
 
-    return {**player, "default_lines": lines}
+    alerts_summary = get_player_alerts_summary(player_id)
+
+    return {**player, "default_lines": lines, "alerts": alerts_summary}
 
 
 @router.get("/players/{player_id}/props")

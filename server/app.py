@@ -75,9 +75,11 @@ def health_check():
 # V2 API routers
 from server.api.players import router as players_router
 from server.api.teams import router as teams_router
+from server.api.news import router as news_router
 
 app.include_router(players_router)
 app.include_router(teams_router)
+app.include_router(news_router)
 
 
 if __name__ == "__main__":

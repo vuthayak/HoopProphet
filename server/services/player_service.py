@@ -108,3 +108,32 @@ def get_player_game_logs(
     result["matchup"] = result["matchup"].fillna("")
 
     return result.to_dict(orient="records")
+
+
+def get_player_alerts_summary(player_id: int) -> list[dict]:
+    """Lightweight alert summary for embedding in player response per D-09.
+
+    Returns only alert_type, severity, subcategory, and last_updated_at.
+    Full details available via /api/players/{id}/news endpoint.
+
+    Graceful degradation: if player_alerts table doesn't exist yet, returns [].
+    """
+    try:
+        from server.pipeline.db.queries import get_player_alerts
+        conn = get_connection()
+        try:
+            alerts = get_player_alerts(conn, player_id)
+        finally:
+            conn.close()
+    except Exception:
+        return []
+
+    return [
+        {
+            "alert_type": a["alert_type"],
+            "severity": a.get("severity", "warning"),
+            "subcategory": a.get("subcategory"),
+            "last_updated_at": a["last_updated_at"],
+        }
+        for a in alerts
+    ]
