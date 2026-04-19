@@ -10,6 +10,7 @@ pyarrow>=19.0.0
 scikit-learn
 pytest>=8.0.0
 pytest-timeout>=2.2.0
+feedparser>=6.0.0
 
 # Phase 3: Model Training & Calibration
 lightgbm>=4.6.0

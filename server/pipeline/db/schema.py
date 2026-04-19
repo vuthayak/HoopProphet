@@ -90,4 +90,38 @@ def init_db(conn: sqlite3.Connection):
         CREATE INDEX IF NOT EXISTS idx_gamelogs_season ON player_game_logs(season);
         CREATE INDEX IF NOT EXISTS idx_gamelogs_date ON player_game_logs(game_date);
         CREATE INDEX IF NOT EXISTS idx_gamelogs_player_season ON player_game_logs(player_id, season);
+
+        CREATE TABLE IF NOT EXISTS news_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source TEXT NOT NULL,
+            source_url TEXT,
+            headline TEXT NOT NULL,
+            raw_content TEXT,
+            published_at TEXT NOT NULL,
+            fetched_at TEXT NOT NULL DEFAULT (datetime('now')),
+            player_id INTEGER,
+            player_name TEXT,
+            alert_keywords TEXT,
+            UNIQUE(source, source_url, published_at)
+        );
+
+        CREATE TABLE IF NOT EXISTS player_alerts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            player_id INTEGER NOT NULL,
+            alert_type TEXT NOT NULL,
+            subcategory TEXT,
+            severity TEXT NOT NULL DEFAULT 'warning',
+            source TEXT NOT NULL,
+            source_url TEXT,
+            headline TEXT,
+            first_seen_at TEXT NOT NULL DEFAULT (datetime('now')),
+            last_updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+            FOREIGN KEY (player_id) REFERENCES players(player_id),
+            UNIQUE(player_id, alert_type, source)
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_news_items_player ON news_items(player_id);
+        CREATE INDEX IF NOT EXISTS idx_news_items_source ON news_items(source, fetched_at);
+        CREATE INDEX IF NOT EXISTS idx_player_alerts_player ON player_alerts(player_id);
+        CREATE INDEX IF NOT EXISTS idx_player_alerts_type ON player_alerts(alert_type);
     """)

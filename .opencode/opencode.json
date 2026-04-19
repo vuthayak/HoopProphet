@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "read": {
+      "/Users/vishvah/Documents/GitHub/HoopProphet/.opencode/get-shit-done/*": "allow"
+    },
+    "external_directory": {
+      "/Users/vishvah/Documents/GitHub/HoopProphet/.opencode/get-shit-done/*": "allow"
+    }
+  }
+}

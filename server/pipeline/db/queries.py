@@ -117,3 +117,80 @@ def get_teams_df(conn: sqlite3.Connection) -> pd.DataFrame:
         "SELECT team_id, abbreviation, full_name FROM teams",
         conn,
     )
+
+
+def insert_news_items(conn: sqlite3.Connection, items: list[dict]):
+    """Insert news items, ignoring duplicates."""
+    cols = ["source", "source_url", "headline", "raw_content", "published_at",
+            "fetched_at", "player_id", "player_name", "alert_keywords"]
+    placeholders = ", ".join(["?"] * len(cols))
+    sql = f"INSERT OR IGNORE INTO news_items ({', '.join(cols)}) VALUES ({placeholders})"
+    rows = [tuple(item.get(c) for c in cols) for item in items]
+    conn.executemany(sql, rows)
+    conn.commit()
+
+
+def insert_player_alerts(conn: sqlite3.Connection, alerts: list[dict]):
+    """Upsert player alerts — update last_updated_at and severity on re-match."""
+    for alert in alerts:
+        conn.execute(
+            """INSERT INTO player_alerts (player_id, alert_type, subcategory, severity, source, source_url, headline, first_seen_at, last_updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+               ON CONFLICT(player_id, alert_type, source) DO UPDATE SET
+                   subcategory=excluded.subcategory,
+                   severity=excluded.severity,
+                   headline=excluded.headline,
+                   source_url=excluded.source_url,
+                   last_updated_at=datetime('now')""",
+            (alert["player_id"], alert["alert_type"], alert.get("subcategory"),
+             alert["severity"], alert["source"], alert.get("source_url"),
+             alert.get("headline"))
+        )
+    conn.commit()
+
+
+def get_player_alerts(conn: sqlite3.Connection, player_id: int) -> list[dict]:
+    """Get active alerts for a player, ordered by last_updated_at DESC."""
+    cursor = conn.execute(
+        "SELECT id, player_id, alert_type, subcategory, severity, source, source_url, headline, first_seen_at, last_updated_at "
+        "FROM player_alerts WHERE player_id = ? ORDER BY last_updated_at DESC",
+        (player_id,)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_news_items(conn: sqlite3.Connection, player_id: int, limit: int = 50) -> list[dict]:
+    """Get news items for a player, ordered by published_at DESC."""
+    cursor = conn.execute(
+        "SELECT id, source, source_url, headline, raw_content, published_at, fetched_at, player_id, player_name, alert_keywords "
+        "FROM news_items WHERE player_id = ? ORDER BY published_at DESC LIMIT ?",
+        (player_id, limit)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_stale_alerts(conn: sqlite3.Connection, max_age_hours: int = 24) -> list[dict]:
+    """Get alerts last updated more than max_age_hours ago (for stale data warning per D-08)."""
+    cursor = conn.execute(
+        "SELECT * FROM player_alerts WHERE datetime(last_updated_at) < datetime('now', ?)",
+        (f"-{max_age_hours} hours",)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def cleanup_stale_news(conn: sqlite3.Connection, max_age_days: int = 30):
+    """Delete news items older than max_age_days to prevent unbounded growth."""
+    conn.execute(
+        "DELETE FROM news_items WHERE datetime(fetched_at) < datetime('now', ?)",
+        (f"-{max_age_days} days",)
+    )
+    conn.commit()
+
+
+def cleanup_expired_alerts(conn: sqlite3.Connection):
+    """Remove alerts where the source news is no longer present (replaced/expired)."""
+    conn.execute(
+        "DELETE FROM player_alerts WHERE player_id NOT IN (SELECT DISTINCT player_id FROM news_items WHERE player_id IS NOT NULL) "
+        "AND datetime(last_updated_at) < datetime('now', '-7 days')"
+    )
+    conn.commit()
