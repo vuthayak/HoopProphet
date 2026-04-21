@@ -134,6 +134,29 @@ Plans:
 - [x] 06-01-PLAN.md — News data layer: SQLite schema, NewsService, RSS/injury report fetching, keyword matching
 - [x] 06-02-PLAN.md — News API endpoints: /players/{id}/news, embedded alerts, integration tests
 
+### Phase 7: Frontend Rebuild
+
+**Goal**: Component-based React app with player analysis, back-test display, and hit rate visualization
+**Depends on**: Phase 5, Phase 6
+**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-07, UI-08, PROP-02, PROP-03, NEWS-03
+**Success Criteria** (what must be TRUE):
+
+1. Component-based SPA with React Router serves three pages: Home (search), Player (analysis), Backtest (accuracy)
+2. Player search with autocomplete fetches from /api/players and navigates to player page
+3. Prop cards show ML probability badges (green/yellow/red), hit rate bar charts (L5/L10/L20/Season), and adjustable line sliders
+4. Game log table displays recent game stats in compact scrollable format
+5. News/injury badges appear next to player names on the player page
+6. Backtest page shows model accuracy summary, season breakdown, and calibration chart
+7. Dark-mode-only design with Tailwind CSS custom theme renders correctly
+8. Vite production build and Docker deployment work
+**Plans:** 4 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Foundation: Vite + React 19 + Tailwind v4 + design system + test infrastructure
+- [ ] 07-02-PLAN.md — Data hooks, navigation shell, badges, skeletons, toast provider
+- [ ] 07-03-PLAN.md — Feature components: PropCard, HitRateChart, LineSlider, GameLogTable, PlayerPage
+- [ ] 07-04-PLAN.md — Backtest page, backend API endpoints, responsive polish, Docker config
+
 ### Phase 8: Polish & Hardening
 
 **Goal**: V1 technical debt is cleaned up and the system is production-ready
@@ -159,7 +182,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 4. Back-Testing Engine          | 3/3            | Complete          | 2026-04-18 |
 | 5. API Layer & Prop Serving     | 3/3            | Complete          | 2026-04-18 |
 | 6. News & Injury Flags          | 2/2            | Complete          | 2026-04-19 |
-| 7. Frontend Rebuild             | 0/?            | Not started       | -          |
+| 7. Frontend Rebuild             | 0/4            | Not started       | -          |
 | 8. Polish & Hardening          | 0/?            | Not started       | -          |
 
 
