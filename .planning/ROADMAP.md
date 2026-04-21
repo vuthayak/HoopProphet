@@ -152,7 +152,7 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Foundation: Vite + React 19 + Tailwind v4 + design system + test infrastructure
+- [x] 07-01-PLAN.md — Foundation: Vite + React 19 + Tailwind v4 + design system + test infrastructure
 - [ ] 07-02-PLAN.md — Data hooks, navigation shell, badges, skeletons, toast provider
 - [ ] 07-03-PLAN.md — Feature components: PropCard, HitRateChart, LineSlider, GameLogTable, PlayerPage
 - [ ] 07-04-PLAN.md — Backtest page, backend API endpoints, responsive polish, Docker config
@@ -182,7 +182,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 4. Back-Testing Engine          | 3/3            | Complete          | 2026-04-18 |
 | 5. API Layer & Prop Serving     | 3/3            | Complete          | 2026-04-18 |
 | 6. News & Injury Flags          | 2/2            | Complete          | 2026-04-19 |
-| 7. Frontend Rebuild             | 0/4            | Not started       | -          |
+| 7. Frontend Rebuild             | 1/4            | In progress       | -          |
 | 8. Polish & Hardening          | 0/?            | Not started       | -          |
 
 
