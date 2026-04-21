@@ -24,6 +24,7 @@ Future: `--prd` mode for PRD extraction is planned for a follow-up PR.
 @/Users/vishvah/Documents/GitHub/HoopProphet/.opencode/get-shit-done/workflows/import.md
 @/Users/vishvah/Documents/GitHub/HoopProphet/.opencode/get-shit-done/references/ui-brand.md
 @/Users/vishvah/Documents/GitHub/HoopProphet/.opencode/get-shit-done/references/gate-prompts.md
+@/Users/vishvah/Documents/GitHub/HoopProphet/.opencode/get-shit-done/references/doc-conflict-engine.md
 </execution_context>
 
 <context>

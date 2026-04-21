@@ -1,11 +1,11 @@
 ---
-name: gsd-import
-description: "Ingest external plans with conflict detection against project decisions before writing anything."
+name: gsd-ultraplan-phase
+description: "[BETA] Offload plan phase to Cursor's ultraplan cloud — drafts remotely while terminal stays free, review in browser with inline comments, import back via /gsd-import. Cursor only."
 ---
 
 <cursor_skill_adapter>
 ## A. Skill Invocation
-- This skill is invoked when the user mentions `gsd-import` or describes a task matching this skill.
+- This skill is invoked when the user mentions `gsd-ultraplan-phase` or describes a task matching this skill.
 - Treat all user text after the skill mention as `{{GSD_ARGS}}`.
 - If no arguments are present, treat `{{GSD_ARGS}}` as empty.
 
@@ -28,18 +28,18 @@ When the workflow needs to spawn a subagent:
 </cursor_skill_adapter>
 
 <objective>
-Import external plan files into the GSD planning system with conflict detection against PROJECT.md decisions.
+Offload GSD's plan phase to Cursor's ultraplan cloud infrastructure.
 
-- **--from**: Import an external plan file, detect conflicts, write as GSD PLAN.md, validate via gsd-plan-checker.
+Ultraplan drafts the plan in a remote cloud session while your terminal stays free.
+Review and comment on the plan in your browser, then import it back via /gsd-import --from.
 
-Future: `--prd` mode for PRD extraction is planned for a follow-up PR.
+⚠ BETA: ultraplan is in research preview. Use /gsd-plan-phase for stable local planning.
+Requirements: Cursor v2.1.91+, claude.ai account, GitHub repository.
 </objective>
 
 <execution_context>
-@/Users/vishvah/Documents/GitHub/HoopProphet/.cursor/get-shit-done/workflows/import.md
+@/Users/vishvah/Documents/GitHub/HoopProphet/.cursor/get-shit-done/workflows/ultraplan-phase.md
 @/Users/vishvah/Documents/GitHub/HoopProphet/.cursor/get-shit-done/references/ui-brand.md
-@/Users/vishvah/Documents/GitHub/HoopProphet/.cursor/get-shit-done/references/gate-prompts.md
-@/Users/vishvah/Documents/GitHub/HoopProphet/.cursor/get-shit-done/references/doc-conflict-engine.md
 </execution_context>
 
 <context>
@@ -47,5 +47,5 @@ Future: `--prd` mode for PRD extraction is planned for a follow-up PR.
 </context>
 
 <process>
-Execute the import workflow end-to-end.
+Execute the ultraplan-phase workflow end-to-end.
 </process>

@@ -1,0 +1,13 @@
+{
+  "backed_up_at": "2026-04-20T19:55:24.745Z",
+  "from_version": "1.37.1",
+  "from_manifest_timestamp": "2026-04-17T20:10:24.767Z",
+  "files": [
+    "get-shit-done/references/planner-source-audit.md",
+    "get-shit-done/workflows/plan-phase.md"
+  ],
+  "pristine_hashes": {
+    "get-shit-done/references/planner-source-audit.md": "7de5bdb07232ce0b1a9f9217164e1635de30c09cc129f3fc1d10f44a9de7a704",
+    "get-shit-done/workflows/plan-phase.md": "b52ee5e078fc88fa3cebfa646f64eba15980578329e23122091d068a5714f017"
+  }
+}

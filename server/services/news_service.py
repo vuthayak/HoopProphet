@@ -214,7 +214,9 @@ class NewsService:
         self._logger.info("Fetching RSS feed from %s", source_url)
 
         try:
-            feed = feedparser.parse(source_url)
+            response = self._session.get(source_url, timeout=10)
+            response.raise_for_status()
+            feed = feedparser.parse(response.text)
             if not feed.entries:
                 self._logger.warning("No entries found in RSS feed: %s", source_url)
                 return []
