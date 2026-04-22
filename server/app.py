@@ -76,10 +76,12 @@ def health_check():
 from server.api.players import router as players_router
 from server.api.teams import router as teams_router
 from server.api.news import router as news_router
+from server.api.backtest import router as backtest_router
 
 app.include_router(players_router)
 app.include_router(teams_router)
 app.include_router(news_router)
+app.include_router(backtest_router)
 
 
 if __name__ == "__main__":

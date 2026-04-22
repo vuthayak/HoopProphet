@@ -9,10 +9,11 @@ services:
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
   frontend:
-    build: ./hoopprophet
+    build:
+      context: ./hoopprophet
+      args:
+        - VITE_API_BASE=http://backend:8000
     ports:
       - "3000:3000"
     depends_on:
       - backend
-    environment:
-      - REACT_APP_API_BASE=http://backend:8000
