@@ -20,6 +20,7 @@ Also verifies:
 """
 
 import os
+import pathlib
 import shutil
 import sqlite3
 import tempfile
@@ -460,6 +461,37 @@ class TestV1Cleanup:
         assert "from server.ml" not in content, "server.ml imports should be removed"
         assert "nba_api.stats" not in content, "nba_api.stats imports should be removed"
         assert "google.generativeai" not in content, "google.generativeai should be removed"
+
+    def test_server_ml_directory_not_exists(self):
+        """server/ml/ directory should not exist (V1 code removed)."""
+        import pathlib
+        ml_dir = pathlib.Path(__file__).parent.parent / "ml"
+        assert not ml_dir.exists(), "server/ml/ directory should be removed"
+
+    def test_no_gemini_key_in_docker_compose(self):
+        """GEMINI_API_KEY should not appear in docker-compose.yml."""
+        compose_path = pathlib.Path(__file__).parent.parent.parent / "docker-compose.yml"
+        if compose_path.exists():
+            content = compose_path.read_text()
+            assert "GEMINI_API_KEY" not in content, "GEMINI_API_KEY should be removed from docker-compose.yml"
+
+    def test_no_v1_code_paths_in_v2(self):
+        """No V1 code paths (xgboost, gemini, server.ml) should be importable in V2."""
+        server_dir = pathlib.Path(__file__).parent.parent
+        for py_file in server_dir.rglob("*.py"):
+            if "__pycache__" in str(py_file):
+                continue
+            if "test_integration_05" in str(py_file):
+                continue  # Test file checks for absence
+            content = py_file.read_text()
+            assert "from server.ml" not in content, f"{py_file.name} imports from server.ml"
+            assert "import server.ml" not in content, f"{py_file.name} imports server.ml"
+            assert "google.generativeai" not in content, f"{py_file.name} imports google.generativeai"
+
+    def test_no_nba_db_file(self):
+        """nba.db (0-byte V1 remnant) should not exist."""
+        nba_db = pathlib.Path(__file__).parent.parent / "data" / "nba.db"
+        assert not nba_db.exists(), "server/data/nba.db should be removed (V1 remnant)"
 
 
 class TestRouteRegistration:
