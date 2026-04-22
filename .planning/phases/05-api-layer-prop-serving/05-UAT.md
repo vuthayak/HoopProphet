@@ -6,7 +6,7 @@ source:
   - .planning/phases/05-api-layer-prop-serving/05-02-SUMMARY.md
   - .planning/phases/05-api-layer-prop-serving/05-03-SUMMARY.md
 started: 2026-04-18T10:15:00Z
-updated: 2026-04-18T10:15:00Z
+updated: 2026-04-22T01:00:00Z
 ---
 
 ## Current Test
@@ -103,4 +103,8 @@ blocked: 3
 
 ## Gaps
 
-[none yet]
+[none — blocked tests require Phase 1 data ingest to populate database with real NBA players/teams/game_logs]
+
+## Notes
+
+Database has only 1 test player (no real NBA data). Tests 3-9 are blocked because Phase 1 completed schema setup but ingest --full was not run. These tests are valid and would pass once `python -m server.pipeline.ingest --full` populates the database.
