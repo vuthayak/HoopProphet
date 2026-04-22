@@ -167,7 +167,11 @@ Plans:
 
 1. Gemini AI summary dependency is fully removed from the backend
 2. Application runs cleanly in Docker Compose with no deprecated V1 code paths
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — V1 code removal, git/build hygiene, CORS hardening, dead code audit
+- [ ] 08-02-PLAN.md — Docker GEMINI_API_KEY removal, V1 cleanup tests, Docker smoke test
 
 ## Progress
 
@@ -184,6 +188,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 5. API Layer & Prop Serving     | 3/3            | Complete          | 2026-04-18 |
 | 6. News & Injury Flags          | 2/2            | Complete          | 2026-04-19 |
 | 7. Frontend Rebuild             | 5/5            | Complete          | 2026-04-22 |
-| 8. Polish & Hardening          | 0/?            | Not started       | -          |
+| 8. Polish & Hardening          | 0/2            | Planned           | -          |
 
 
