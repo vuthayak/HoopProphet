@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function SkeletonTable({ rows = 5 }) {
   return (
     <div className="animate-pulse space-y-2">

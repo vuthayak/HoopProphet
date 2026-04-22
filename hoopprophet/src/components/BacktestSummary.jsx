@@ -1,3 +1,4 @@
+import React from 'react';
 import { useBacktestSummary } from '../hooks/useBacktest';
 
 export default function BacktestSummary({ data }) {

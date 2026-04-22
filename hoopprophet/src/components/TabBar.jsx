@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function TabBar({ tabs, activeTab, onTabChange }) {
   return (
     <div className="flex border-b border-border overflow-x-auto">

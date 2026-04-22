@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { usePlayerData } from '../hooks/usePlayerData';

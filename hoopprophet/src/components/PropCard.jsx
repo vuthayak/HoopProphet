@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import ProbabilityBadge from './ProbabilityBadge';
 import LineSlider from './LineSlider';

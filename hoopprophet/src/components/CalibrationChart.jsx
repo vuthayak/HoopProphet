@@ -1,3 +1,4 @@
+import React from 'react';
 import { ParentSize } from '@visx/responsive';
 import { scaleLinear } from '@visx/scale';
 import { LinePath, Circle } from '@visx/shape';

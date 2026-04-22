@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function GameLogTable({ gamelogs }) {
   if (!gamelogs || gamelogs.length === 0) {
     return <p className="text-text-muted text-sm">No game logs available for this player.</p>;

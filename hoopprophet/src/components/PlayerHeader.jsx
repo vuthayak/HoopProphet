@@ -1,3 +1,4 @@
+import React from 'react';
 import AlertBadge from './AlertBadge';
 
 export default function PlayerHeader({ player, alerts }) {

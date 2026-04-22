@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function SeasonBreakdown({ seasons }) {
   if (!seasons || seasons.length === 0) {
     return <p className="text-text-muted text-sm">No season data available.</p>;

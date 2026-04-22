@@ -1,3 +1,4 @@
+import React from 'react';
 import { useBacktestSummary, useBacktestSeasons, useBacktestCalibration } from '../hooks/useBacktest';
 import BacktestSummaryComponent from '../components/BacktestSummary';
 import SeasonBreakdown from '../components/SeasonBreakdown';

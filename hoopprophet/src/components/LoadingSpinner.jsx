@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function LoadingSpinner() {
   return (
     <svg className="w-6 h-6 animate-spin text-text-secondary" fill="none" viewBox="0 0 24 24">

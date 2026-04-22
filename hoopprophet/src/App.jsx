@@ -1,3 +1,4 @@
+import React from 'react';
 import { Routes, Route } from 'react-router';
 import HomePage from './pages/HomePage';
 import PlayerPage from './pages/PlayerPage';

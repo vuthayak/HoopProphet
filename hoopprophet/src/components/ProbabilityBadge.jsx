@@ -1,3 +1,4 @@
+import React from 'react';
 import { PROB_THRESHOLDS } from '../utils/constants';
 import { getProbabilityTextColor } from '../utils/formatters';
 

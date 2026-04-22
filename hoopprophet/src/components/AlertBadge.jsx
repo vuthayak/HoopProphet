@@ -1,3 +1,4 @@
+import React from 'react';
 import { ALERT_STYLES } from '../utils/constants';
 
 export default function AlertBadge({ alert }) {

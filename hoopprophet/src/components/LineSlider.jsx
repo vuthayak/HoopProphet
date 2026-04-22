@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { PROB_THRESHOLDS } from '../utils/constants';
 
