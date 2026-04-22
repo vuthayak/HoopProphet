@@ -149,13 +149,14 @@ Plans:
 6. Backtest page shows model accuracy summary, season breakdown, and calibration chart
 7. Dark-mode-only design with Tailwind CSS custom theme renders correctly
 8. Vite production build and Docker deployment work
-**Plans:** 4 plans
+**Plans:** 5 plans
 
 Plans:
 - [x] 07-01-PLAN.md — Foundation: Vite + React 19 + Tailwind v4 + design system + test infrastructure
-- [ ] 07-02-PLAN.md — Data hooks, navigation shell, badges, skeletons, toast provider
-- [ ] 07-03-PLAN.md — Feature components: PropCard, HitRateChart, LineSlider, GameLogTable, PlayerPage
-- [ ] 07-04-PLAN.md — Backtest page, backend API endpoints, responsive polish, Docker config
+- [x] 07-02-PLAN.md — Data hooks, navigation shell, badges, skeletons, toast provider
+- [x] 07-03-PLAN.md — Feature components: PropCard, HitRateChart, LineSlider, GameLogTable, PlayerPage
+- [x] 07-04-PLAN.md — Backtest page, backend API endpoints, responsive polish, Docker config
+- [ ] 07-05-PLAN.md — Gap closure: SPA routing fallback fix for serve (--single flag)
 
 ### Phase 8: Polish & Hardening
 
