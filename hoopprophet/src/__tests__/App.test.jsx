@@ -11,7 +11,7 @@ describe('App', () => {
         <App />
       </BrowserRouter>
     );
-    expect(screen.getByText('HoopProphet')).toBeInTheDocument();
+    expect(screen.getByText('HoopProphet', { selector: 'a' })).toBeInTheDocument();
   });
 
   it('renders Backtest nav link', () => {
