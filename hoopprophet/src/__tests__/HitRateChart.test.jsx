@@ -1,6 +1,7 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import HitRateChart from '../HitRateChart';
+import HitRateChart from '../components/HitRateChart';
 
 const mockData = {
   hit_rates: {

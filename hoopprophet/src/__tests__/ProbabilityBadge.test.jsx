@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import React from 'react';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ProbabilityBadge from '../ProbabilityBadge';
+import ProbabilityBadge from '../components/ProbabilityBadge';
 
 describe('ProbabilityBadge', () => {
   it('renders 72% with green bg for probability >= 0.65', () => {

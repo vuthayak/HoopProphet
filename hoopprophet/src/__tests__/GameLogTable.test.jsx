@@ -1,6 +1,7 @@
+import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import GameLogTable from '../GameLogTable';
+import GameLogTable from '../components/GameLogTable';
 
 const mockLogs = [
   { game_id: '1', game_date: '2024-01-01', matchup: 'LAL vs GSW', wl: 'W', pts: 28, reb: 7, ast: 5, stl: 1, blk: 0, min: 32, is_dnp: false },
